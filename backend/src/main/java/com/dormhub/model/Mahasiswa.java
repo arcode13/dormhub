@@ -10,11 +10,13 @@ public class Mahasiswa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)  // Lazy loading for performance
+    @JoinColumn(name = "user_id", nullable = false) // Foreign key to the User table
+    private User user;
 
-    @Column(name = "jurusan_id", nullable = false)
-    private int jurusanId; // Hubungan dengan tabel jurusan
+    @ManyToOne(fetch = FetchType.LAZY)  // Lazy loading for performance
+    @JoinColumn(name = "jurusan_id", nullable = false) // Foreign key to the Jurusan table
+    private Jurusan jurusan;
 
     @Column(name = "no_kamar", nullable = false)
     private int noKamar;
@@ -22,7 +24,8 @@ public class Mahasiswa {
     @Column(name = "no_kasur", nullable = false)
     private int noKasur;
 
-    // Getter dan Setter
+    // Getter and Setter methods
+
     public int getId() {
         return id;
     }
@@ -31,20 +34,20 @@ public class Mahasiswa {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getJurusanId() {
-        return jurusanId;
+    public Jurusan getJurusan() {
+        return jurusan;
     }
 
-    public void setJurusanId(int jurusanId) {
-        this.jurusanId = jurusanId;
+    public void setJurusan(Jurusan jurusan) {
+        this.jurusan = jurusan;
     }
 
     public int getNoKamar() {
