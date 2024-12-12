@@ -1,15 +1,16 @@
 package com.dormhub.controller;
 
-import com.dormhub.model.User;
-import com.dormhub.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.dormhub.model.User;
+import com.dormhub.service.UserService;
 
 @Controller
 public class LoginController {
@@ -20,7 +21,7 @@ public class LoginController {
     private UserService userService;
 
     /**
-     * Menampilkan halaman login.
+     * Menampilkan halaman loginnnn.
      */
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
