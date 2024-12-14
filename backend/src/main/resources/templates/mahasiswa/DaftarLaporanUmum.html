@@ -166,13 +166,14 @@
                     </div>
                 </div>
                 
-                <script>
-                    $(document).ready(function () {
+                <script th:inline="javascript">
+                    $(document).ready(function() {
                         $('#table').DataTable({
-                            "order": [[0, "asc"]]
+                            "order": [[0, 'asc']]  <!-- Format yang benar: [kolom, urutan] -->
                         });
                     });
                 </script>
+                
                 
                 <footer class="footer">
                     <div class="container-fluid">

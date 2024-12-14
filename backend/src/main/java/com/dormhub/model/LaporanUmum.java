@@ -1,7 +1,10 @@
 package com.dormhub.model;
 
 import jakarta.persistence.*;
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+>>>>>>> 051d97f0d7862a3decd7b4a47589eae18684a802
 
 @Entity
 @Table(name = "laporan_umum")
@@ -11,6 +14,7 @@ public class LaporanUmum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+<<<<<<< HEAD
     @Column(name = "helpdesk_id", nullable = false)
     private int helpdeskId;
 
@@ -36,6 +40,29 @@ public class LaporanUmum {
     private LocalDateTime updatedAt;
 
     // Getters and Setters
+=======
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mahasiswa_id", nullable = false)
+    private Mahasiswa mahasiswa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "helpdesk_id", nullable = false)
+    private HelpDesk helpDesk;
+
+    @Column(name = "jenis")
+    private String jenis;
+
+    @Column(name = "alasan")
+    private String alasan;
+
+    @Column(name = "bukti_foto")
+    private String buktiFoto;
+
+    @Column(name = "status")
+    private String status;
+
+    // Getters and setters
+>>>>>>> 051d97f0d7862a3decd7b4a47589eae18684a802
     public int getId() {
         return id;
     }
@@ -44,6 +71,7 @@ public class LaporanUmum {
         this.id = id;
     }
 
+<<<<<<< HEAD
     public int getHelpdeskId() {
         return helpdeskId;
     }
@@ -58,6 +86,22 @@ public class LaporanUmum {
 
     public void setMahasiswaId(int mahasiswaId) {
         this.mahasiswaId = mahasiswaId;
+=======
+    public Mahasiswa getMahasiswa() {
+        return mahasiswa;
+    }
+
+    public void setMahasiswa(Mahasiswa mahasiswa) {
+        this.mahasiswa = mahasiswa;
+    }
+
+    public HelpDesk getHelpDesk() {
+        return helpDesk;
+    }
+
+    public void setHelpDesk(HelpDesk helpDesk) {
+        this.helpDesk = helpDesk;
+>>>>>>> 051d97f0d7862a3decd7b4a47589eae18684a802
     }
 
     public String getJenis() {
@@ -91,6 +135,7 @@ public class LaporanUmum {
     public void setStatus(String status) {
         this.status = status;
     }
+<<<<<<< HEAD
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -107,4 +152,6 @@ public class LaporanUmum {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+=======
+>>>>>>> 051d97f0d7862a3decd7b4a47589eae18684a802
 }

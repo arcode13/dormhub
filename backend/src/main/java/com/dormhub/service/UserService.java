@@ -9,6 +9,7 @@ import com.dormhub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,92 +28,102 @@ public class UserService {
     private MahasiswaRepository mahasiswaRepository;
 
     @Autowired
-    private RoomService roomService; // Tambahan RoomService untuk logika lantai, kamar, dan kasur
+    private RoomService roomService; // Ensure RoomService is implemented and available
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder; // Memanfaatkan dependency injection untuk BCryptPasswordEncoder
+    private BCryptPasswordEncoder passwordEncoder;
 
     /**
-     * Mendaftarkan pengguna baru
+     * Registers a new user along with associated mahasiswa data.
      *
-     * @param user Data user dari form pendaftaran
-     * @param jurusan Jurusan yang dipilih oleh pengguna
-     * @return Pesan sukses atau error
+     * @param user    The user data to be registered.
+     * @param jurusan The selected major for the user.
+     * @return Success or error message.
      */
+    @Transactional
     public String registerUser(User user, Jurusan jurusan) {
-        // Validasi email sudah digunakan
+        // Validate if email is already registered
         if (userRepository.existsByEmail(user.getEmail())) {
+            logger.warn("Email already registered: {}", user.getEmail());
             return "Email sudah terdaftar";
         }
 
         try {
-            // Set waktu saat ini
             LocalDateTime now = LocalDateTime.now();
 
-            // Hash password menggunakan BCrypt
+            // Hash password using BCrypt
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-            // Set level untuk Mahasiswa (ambil dari DB jika perlu)
-            Optional<Level> levelOpt = Optional.ofNullable(user.getLevel());
-            if (levelOpt.isPresent()) {
-                // Set level default jika belum diatur
-                user.setLevel(levelOpt.get());
-            } else {
+            // Set level for Mahasiswa (if not set, default to "Mahasiswa")
+            if (user.getLevel() == null) {
                 Level level = new Level();
-                level.setId(1L); // Ganti dengan level "Mahasiswa" sesuai ID yang ada di DB
+                level.setId(1L); // Default to "Mahasiswa"
                 user.setLevel(level);
             }
 
-            // Set waktu pembuatan dan pembaruan
+            // Set timestamps
             user.setCreatedAt(now);
             user.setUpdatedAt(now);
 
-            // Simpan user ke database
+            // Save user to the database
             User savedUser = userRepository.save(user);
 
-            // Simpan data mahasiswa dengan jurusan
+            // Assign room for Mahasiswa
+            int[] roomAssignment = roomService.assignRoom();
+
+            // Save Mahasiswa data (associate with the user)
             Mahasiswa mahasiswa = new Mahasiswa();
-            mahasiswa.setUserId(savedUser.getId());
-            mahasiswa.setJurusanId(jurusan.getId()); // Hubungkan dengan jurusan
-            mahasiswa.setNoKamar(roomService.assignRoom()[0]);
-            mahasiswa.setNoKasur(roomService.assignRoom()[1]);
+            mahasiswa.setUser(savedUser);
+            mahasiswa.setJurusan(jurusan);
+            mahasiswa.setNoKamar(roomAssignment[0]);
+            mahasiswa.setNoKasur(roomAssignment[1]);
             mahasiswaRepository.save(mahasiswa);
 
+            logger.info("User registered successfully: {}", user.getEmail());
             return "Berhasil mendaftar";
         } catch (Exception e) {
-            logger.error("Terjadi kesalahan saat mendaftar user: ", e);
+            logger.error("Error during user registration: ", e);
             return "Terjadi kesalahan saat mendaftar: " + e.getMessage();
         }
     }
 
     /**
-     * Autentikasi pengguna berdasarkan email dan password
+     * Authenticates a user by email and password.
      *
-     * @param email Email pengguna
-     * @param password Password pengguna
-     * @return User object jika autentikasi berhasil, null jika gagal
+     * @param email    User email.
+     * @param password User password.
+     * @return User object if authentication succeeds, null otherwise.
      */
     public User authenticate(String email, String password) {
-        logger.debug("Mencoba autentikasi untuk email: {}", email);
+        logger.debug("Authenticating user: {}", email);
 
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            logger.debug("User ditemukan: {}", user.getEmail());
-            logger.debug("Stored hash: {}", user.getPassword());
+            logger.debug("User found: {}", user.getEmail());
 
+            // Compare hashed password with provided password
             if (passwordEncoder.matches(password, user.getPassword())) {
-                logger.info("Login berhasil untuk user: {}", email);
+                logger.info("Authentication successful for user: {}", email);
                 return user;
             } else {
-                logger.warn("Password tidak cocok untuk user: {}", email);
+                logger.warn("Invalid password for user: {}", email);
             }
         } else {
-            logger.warn("User dengan email {} tidak ditemukan", email);
+            logger.warn("User not found for email: {}", email);
         }
 
-        return null; // Login gagal
+        return null;
     }
 
+    /**
+     * Finds a user by their email.
+     *
+     * @param email User email.
+     * @return User object or null if not found.
+     */
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
 }

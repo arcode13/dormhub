@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class); // Tambahkan logger
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     private final CustomUserDetailsService userDetailsService;
 
@@ -25,47 +25,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Nonaktifkan CSRF jika tidak dibutuhkan
-            .headers(headers -> headers.frameOptions().sameOrigin()) // Untuk iframe jika diperlukan
+            .csrf(csrf -> csrf.disable()) // Disable CSRF if not needed
+            .headers(headers -> headers.frameOptions().sameOrigin()) // Needed for iframes (optional)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/daftar", "/assets/**", "/css/**", "/js/**", "/img/**").permitAll() // URL bebas akses
-                .anyRequest().authenticated() // URL lain memerlukan autentikasi
+                .requestMatchers("/", "/login", "/daftar", "/assets/**", "/css/**", "/js/**", "/img/**").permitAll() // Public pages
+                .anyRequest().authenticated() // All other pages require authentication
             )
             .formLogin(login -> login
-                .loginPage("/login") // Gunakan halaman login kustom
-                .loginProcessingUrl("/login") // URL untuk memproses login
-                .usernameParameter("email") // Parameter untuk username diubah menjadi email
-                .passwordParameter("password") // Parameter untuk password tetap
-                .defaultSuccessUrl("/", true) // Redirect default setelah login berhasil
+                .loginPage("/login") // Custom login page
+                .loginProcessingUrl("/login") // Login processing URL
+                .usernameParameter("email") // Use email as username
+                .passwordParameter("password") // Password remains the same
+                .defaultSuccessUrl("/", true) // Redirect after successful login
                 .successHandler((request, response, authentication) -> {
-                    // Redirect berdasarkan role
-                    String redirectUrl = "/";
-                    if (authentication.getAuthorities().stream()
-                            .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"))) {
-                        redirectUrl = "/admin/dashboard";
-                    } else if (authentication.getAuthorities().stream()
-                            .anyMatch(role -> role.getAuthority().equals("ROLE_MAHASISWA"))) {
-                        redirectUrl = "/mahasiswa/dashboard";
-                    } else if (authentication.getAuthorities().stream()
-                            .anyMatch(role -> role.getAuthority().equals("ROLE_HELPDESK"))) {
-                        redirectUrl = "/help-desk/dashboard";
-                    }
-                    response.sendRedirect(redirectUrl);
+                    String redirectUrl = getRedirectUrlBasedOnRole(authentication);
+                    response.sendRedirect(redirectUrl); // Redirect based on role
                 })
-                .failureUrl("/login?error=true") // Redirect jika login gagal
+                .failureUrl("/login?error=true") // Redirect if login fails
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/logout") // URL untuk logout
-                .logoutSuccessUrl("/login?logout") // Redirect setelah logout
+                .logoutUrl("/logout") // Logout URL
+                .logoutSuccessUrl("/login?logout") // Redirect after logout
                 .permitAll()
             )
             .rememberMe(remember -> remember
-                .key("uniqueAndSecretKey") // Key aman untuk fitur "Ingat Saya"
-                .tokenValiditySeconds(1209600) // Durasi 2 minggu
+                .key("uniqueAndSecretKey") // Secure key for remember-me functionality
+                .tokenValiditySeconds(1209600) // Duration (2 weeks)
             );
 
-        logger.info("SecurityFilterChain konfigurasi selesai"); // Gunakan logger di sini
+        logger.info("SecurityFilterChain configuration completed");
         return http.build();
     }
 
@@ -76,6 +65,21 @@ public class SecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Encoder untuk hashing password
+        return new BCryptPasswordEncoder(); // Encoder for password hashing
+    }
+
+    private String getRedirectUrlBasedOnRole(org.springframework.security.core.Authentication authentication) {
+        return authentication.getAuthorities().stream()
+            .map(authority -> authority.getAuthority())
+            .findFirst()
+            .map(role -> {
+                switch (role) {
+                    case "ROLE_ADMIN": return "/admin/dashboard";
+                    case "ROLE_MAHASISWA": return "/mahasiswa/dashboard";
+                    case "ROLE_HELPDESK": return "/help-desk/dashboard";
+                    default: return "/";
+                }
+            })
+            .orElse("/");
     }
 }
