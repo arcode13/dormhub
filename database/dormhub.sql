@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2024 at 08:22 AM
+-- Generation Time: Dec 14, 2024 at 10:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -126,19 +126,21 @@ CREATE TABLE `laporan_barang` (
   `mahasiswa_id` int(11) NOT NULL,
   `jenis` varchar(10) NOT NULL,
   `bukti_foto` varchar(255) NOT NULL,
-  `status` varchar(20) NOT NULL
+  `status` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `laporan_barang`
 --
 
-INSERT INTO `laporan_barang` (`id`, `helpdesk_id`, `mahasiswa_id`, `jenis`, `bukti_foto`, `status`) VALUES
-(1, 1, 1, 'paket', 'bukti_paket1.jpg', 'menunggu'),
-(2, 2, 2, 'makanan', 'bukti_makanan1.jpg', 'diterima'),
-(3, 3, 3, 'paket', 'bukti_paket2.jpg', 'menunggu'),
-(4, 1, 4, 'makanan', 'bukti_makanan2.jpg', 'diterima'),
-(5, 2, 5, 'paket', 'bukti_paket3.jpg', 'menunggu');
+INSERT INTO `laporan_barang` (`id`, `helpdesk_id`, `mahasiswa_id`, `jenis`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'paket', 'bukti_paket1.jpg', 'menunggu', '2024-12-15 04:43:33', '2024-12-15 04:43:37'),
+(2, 2, 2, 'makanan', 'bukti_makanan1.jpg', 'diterima', '2024-12-15 04:43:39', '2024-12-15 04:43:46'),
+(3, 3, 3, 'paket', 'bukti_paket2.jpg', 'menunggu', '2024-12-15 04:43:52', '2024-12-15 04:43:54'),
+(4, 1, 4, 'makanan', 'bukti_makanan2.jpg', 'diterima', '2024-12-15 04:43:57', '2024-12-15 04:43:59'),
+(5, 2, 5, 'paket', 'bukti_paket3.jpg', 'menunggu', '2024-12-15 04:44:02', '2024-12-15 04:44:04');
 
 -- --------------------------------------------------------
 
@@ -150,22 +152,24 @@ CREATE TABLE `laporan_umum` (
   `id` int(11) NOT NULL,
   `helpdesk_id` int(11) NOT NULL,
   `mahasiswa_id` int(11) NOT NULL,
-  `jenis` varchar(10) NOT NULL,
+  `jenis` varchar(255) DEFAULT NULL,
   `alasan` varchar(255) NOT NULL,
   `bukti_foto` varchar(255) NOT NULL,
-  `status` varchar(20) NOT NULL
+  `status` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `laporan_umum`
 --
 
-INSERT INTO `laporan_umum` (`id`, `helpdesk_id`, `mahasiswa_id`, `jenis`, `alasan`, `bukti_foto`, `status`) VALUES
-(1, 1, 1, 'izin', 'Menghadiri seminar', 'izin1.jpg', 'menunggu'),
-(2, 2, 2, 'keluhan', 'AC rusak', 'keluhan1.jpg', 'setuju'),
-(3, 3, 3, 'izin', 'Kunjungan keluarga', 'izin2.jpg', 'tolak'),
-(4, 1, 4, 'keluhan', 'Lampu mati', 'keluhan2.jpg', 'menunggu'),
-(5, 2, 5, 'izin', 'Liburan keluarga', 'izin3.jpg', 'setuju');
+INSERT INTO `laporan_umum` (`id`, `helpdesk_id`, `mahasiswa_id`, `jenis`, `alasan`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 19, 'izin', 'Menghadiri seminar', 'izin1.jpg', 'menunggu', '2024-12-15 04:44:10', '2024-12-15 04:44:13'),
+(2, 2, 19, 'keluhan', 'AC rusak', 'keluhan1.jpg', 'setuju', '2024-12-15 04:44:19', '2024-12-15 04:44:29'),
+(3, 3, 19, 'izin', 'Kunjungan keluarga', 'izin2.jpg', 'tolak', '2024-12-15 04:44:32', '2024-12-15 04:44:35'),
+(4, 1, 4, 'keluhan', 'Lampu mati', 'keluhan2.jpg', 'menunggu', '2024-12-15 04:44:38', '2024-12-15 04:44:40'),
+(5, 2, 5, 'izin', 'Liburan keluarga', 'izin3.jpg', 'setuju', '2024-12-15 04:44:43', '2024-12-15 04:44:47');
 
 -- --------------------------------------------------------
 
@@ -223,7 +227,9 @@ INSERT INTO `mahasiswa` (`id`, `user_id`, `jurusan_id`, `no_kamar`, `no_kasur`) 
 (14, 22, 13, 114, 4),
 (15, 43, 12, 114, 2),
 (16, 44, 10, 114, 3),
-(17, 45, 9, 114, 4);
+(17, 45, 9, 114, 4),
+(18, 46, 9, 201, 1),
+(19, 47, 1, 201, 2);
 
 -- --------------------------------------------------------
 
@@ -270,7 +276,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `nomor_hp`, `jenis_kelamin`, `level_id`, `created_at`, `updated_at`) VALUES
-(1, 'Andi Nugraha', 'andi.nugraha@dormhub.web.id', 'password123', 'default.png', '08121234567', 'Laki-Laki', 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(1, 'Andi Nugraha', 'andi.nugraha@dormhub.web.id', '$2a$10$BEsiccIubK6HFPLEHSe30eojugmpnf0ZoBKDxaaU9tWMpdNe28Q1S', 'default.png', '08121234567', 'Laki-Laki', 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (2, 'Rina Ayu', 'rina.ayu@dormhub.web.id', 'password123', 'default.png', '08121238976', 'Perempuan', 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (3, 'Joko Santoso', 'joko.santoso@dormhub.web.id', 'password123', 'default.png', '08121234578', 'Laki-Laki', 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (4, 'Rudi Wijaya', 'rudi.wijaya@dormhub.web.id', 'password123', 'default.png', '08127891234', 'Laki-Laki', 4, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
@@ -314,7 +320,9 @@ INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `
 (42, 'df df', 'tester@gmail.com', '$2a$10$Lo1twMs9tPpbjiyJXKHZ4OA3mhRWVZp50nLMjHX1y3aFCfbNEcf7W', 'default.png', '5453535', 'Laki-Laki', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (43, 'trgtrghrtb', 'admin@gmail.com', '$2a$10$Zq64SaL0mIlFJaynZd8jx.WORvSZZ8Z0eznZlJecXS51rIRR4cRbG', 'default.png', '55454', 'Perempuan', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (44, 'cedsfefefe', 'kontits@gmail.com', '$2a$10$AuDA3..xJG/FFn33VUQM.eA4w7lrrFCk3p3EkRxCrJBLO7r96YXdi', 'default.png', '214325454354', 'Laki-Laki', 1, '2024-12-04 14:00:51', '2024-12-04 14:00:51'),
-(45, 'wefwef', 'msy4554ahrulma@gmail.com', '$2a$10$uhFEUvh4lV/F15xZWYRqOu0eTqQDBe4rggxY5RycTxcePjdB0qRdq', 'default.png', '344334', 'Laki-Laki', 1, '2024-12-04 14:02:57', '2024-12-04 14:02:57');
+(45, 'wefwef', 'msy4554ahrulma@gmail.com', '$2a$10$uhFEUvh4lV/F15xZWYRqOu0eTqQDBe4rggxY5RycTxcePjdB0qRdq', 'default.png', '344334', 'Laki-Laki', 1, '2024-12-04 14:02:57', '2024-12-04 14:02:57'),
+(46, 'wefwef', 'admin123@gmail.com', '$2a$10$BEsiccIubK6HFPLEHSe30eojugmpnf0ZoBKDxaaU9tWMpdNe28Q1S', 'default.png', '08874568743', 'Laki-Laki', 1, '2024-12-05 00:16:25', '2024-12-05 00:16:25'),
+(47, 'tester123', 'tester123@gmail.com', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '087477575675', 'Laki-Laki', 1, '2024-12-15 03:43:31', '2024-12-15 03:43:31');
 
 --
 -- Indexes for dumped tables
@@ -440,7 +448,7 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT for table `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `senior_residence`
@@ -452,7 +460,7 @@ ALTER TABLE `senior_residence`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- Constraints for dumped tables

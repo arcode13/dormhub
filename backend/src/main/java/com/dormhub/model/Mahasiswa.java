@@ -14,7 +14,7 @@ public class Mahasiswa {
     private int userId;
 
     @Column(name = "jurusan_id", nullable = false)
-    private int jurusanId; // Hubungan dengan tabel jurusan
+    private int jurusanId;
 
     @Column(name = "no_kamar", nullable = false)
     private int noKamar;

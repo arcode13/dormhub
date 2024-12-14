@@ -111,7 +111,7 @@
                     <div class="container-fluid">
                         <div class="row page-title">
                             <div class="col-md-12">
-                                <h4 class="mb-1 mt-0 text-welcome">Hallo John Doe, Selamat Pagi 👋</h4>
+                                <h4 class="mb-1 mt-0 text-welcome">Hallo <span th:text="${namaMahasiswa}"></span>, <span th:text="${ucapan}"></span> 👋</h4>
                             </div>
                         </div>
                         
@@ -169,7 +169,7 @@
                                     <div class="card-body p-0">
                                         <div class="media p-3 d-flex align-items-center">
                                             <div class="media-body">
-                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2">5</h3>
+                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2" th:text="${laporanIzinBulanIni}"></h3>
                                                 <span class="font-weight-500">Laporan Izin Bulan Ini</span>
                                             </div>
                                             <div class="align-self-center ml-3">
@@ -186,7 +186,7 @@
                                     <div class="card-body p-0">
                                         <div class="media p-3 d-flex align-items-center">
                                             <div class="media-body">
-                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2">2</h3>
+                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2" th:text="${laporanKeluhanBulanIni}"></h3>
                                                 <span class="font-weight-500">Laporan Keluhan Bulan Ini</span>
                                             </div>
                                             <div class="align-self-center ml-3">
@@ -203,7 +203,7 @@
                                     <div class="card-body p-0">
                                         <div class="media p-3 d-flex align-items-center">
                                             <div class="media-body">
-                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2">10</h3>
+                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2" th:text="${totalSeluruhLaporan}"></h3>
                                                 <span class="font-weight-500">Total Seluruh Laporan</span>
                                             </div>
                                             <div class="align-self-center ml-3">
