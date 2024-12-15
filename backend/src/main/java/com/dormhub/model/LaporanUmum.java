@@ -17,19 +17,19 @@ public class LaporanUmum {
     @Column(name = "mahasiswa_id", nullable = false)
     private int mahasiswaId;
 
-    @Column(name = "jenis", length = 255)
+    @Column(name = "jenis", nullable = false)
     private String jenis;
 
-    @Column(name = "alasan", nullable = false, length = 255)
+    @Column(name = "alasan", nullable = false)
     private String alasan;
 
-    @Column(name = "bukti_foto", nullable = false, length = 255)
+    @Column(name = "bukti_foto", nullable = true)
     private String buktiFoto;
 
-    @Column(name = "status", length = 255)
-    private String status;
+    @Column(name = "status", nullable = false)
+    private String status = "menunggu";
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")

@@ -69,7 +69,7 @@
                         <ul class="metismenu" id="menu-bar">
                             <li class="menu-title">Menu</li>
                             <li>
-                                <a href="Dashboard.html">
+                                <a href="/mahasiswa/dashboard">
                                     <i class="fa fa-home"></i>
                                     <span>Beranda</span>
                                 </a>
@@ -82,15 +82,15 @@
                                 </a>
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li>
-                                        <a href="BuatLaporanUmum.html">Buat Laporan</a>
+                                        <a href="/mahasiswa/buat-laporan-umum">Buat Laporan</a>
                                     </li>
                                     <li>
-                                        <a href="DaftarLaporanUmum.html">Daftar Laporan</a>
+                                        <a href="/mahasiswa/daftar-laporan">Daftar Laporan</a>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="InformasiKamar.html">
+                                <a href="/mahasiswa/informasi-kamar">
                                     <i class="fa fa-bed"></i>
                                     <span>Informasi Kamar</span>
                                 </a>
@@ -113,7 +113,7 @@
                             <div class="offset-lg-2 col-lg-7">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="POST">
+                                        <form action="/mahasiswa/buat-laporan-umum" method="post" enctype="multipart/form-data">
                                             <div class="form-group">
                                                 <label>Kategori</label>
                                                 <div class="custom-control custom-radio mb-2">
@@ -133,7 +133,7 @@
                                                 <label>Bukti (Opsional)</label>
                                                 <div class="d-flex">
                                                     <label id="custom" for="image"><i class="fa-regular fa-images"></i><small>Upload</small></label>
-                                                    <input type="file" name="image" id="image" hidden>
+                                                    <input type="file" name="buktiFoto" id="image" hidden>
                                                     <div id="list-images"></div>
                                                 </div>
                                             </div>

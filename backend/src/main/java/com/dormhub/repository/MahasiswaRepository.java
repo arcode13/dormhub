@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MahasiswaRepository extends JpaRepository<Mahasiswa, Integer> {
 
@@ -14,6 +16,5 @@ public interface MahasiswaRepository extends JpaRepository<Mahasiswa, Integer> {
     @Query("SELECT COUNT(m) FROM Mahasiswa m WHERE m.noKamar = ?1")
     int countOccupantsInRoom(int noKamar);
 
-    // Metode baru untuk mencari mahasiswa berdasarkan user_id
-    Mahasiswa findByUserId(int userId);
+    Optional<Mahasiswa> findByUserId(int userId);
 }
