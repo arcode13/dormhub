@@ -76,7 +76,7 @@ public class SecurityConfig {
                 switch (role) {
                     case "ROLE_ADMIN": return "/admin/dashboard";
                     case "ROLE_MAHASISWA": return "/mahasiswa/dashboard";
-                    case "ROLE_HELPDESK": return "/help-desk/dashboard";
+                    case "ROLE_HELP_DESK": return "/help-desk/dashboard";
                     default: return "/";
                 }
             })

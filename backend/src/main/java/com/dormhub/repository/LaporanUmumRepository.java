@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface LaporanUmumRepository extends JpaRepository<LaporanUmum, Integer> {
 
@@ -25,4 +27,6 @@ public interface LaporanUmumRepository extends JpaRepository<LaporanUmum, Intege
      */
     @Query(value = "SELECT COUNT(*) FROM laporan_umum WHERE jenis = 'keluhan' AND mahasiswa_id = :mahasiswaId AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())", nativeQuery = true)
     int countLaporanKeluhan(int mahasiswaId);
+
+    List<LaporanUmum> findAllByMahasiswaId(int mahasiswaId);
 }

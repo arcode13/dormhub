@@ -22,6 +22,12 @@ public class Mahasiswa {
     @Column(name = "no_kasur", nullable = false)
     private int noKasur;
 
+    @Column(name = "is_checkin", nullable = false)
+    private int isCheckin;
+
+    @Column(name = "is_checkout", nullable = false)
+    private int isCheckout;
+
     // Getter dan Setter
     public int getId() {
         return id;
@@ -61,5 +67,21 @@ public class Mahasiswa {
 
     public void setNoKasur(int noKasur) {
         this.noKasur = noKasur;
+    }
+
+    public int getIsCheckin() {
+        return isCheckin;
+    }
+
+    public void setIsCheckin(int isCheckin) {
+        this.isCheckin = isCheckin;
+    }
+
+    public int getIsCheckout() {
+        return isCheckout;
+    }
+
+    public void setIsCheckout(int isCheckout) {
+        this.isCheckout = isCheckout;
     }
 }

@@ -75,7 +75,7 @@
                         <ul class="metismenu" id="menu-bar">
                             <li class="menu-title">Menu</li>
                             <li>
-                                <a href="Dashboard.html">
+                                <a href="/mahasiswa/dashboard">
                                     <i class="fa fa-home"></i>
                                     <span>Beranda</span>
                                 </a>
@@ -88,15 +88,15 @@
                                 </a>
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li>
-                                        <a href="BuatLaporanUmum.html">Buat Laporan</a>
+                                        <a href="/mahasiswa/buat-laporan-umum">Buat Laporan</a>
                                     </li>
                                     <li>
-                                        <a href="DaftarLaporanUmum.html">Daftar Laporan</a>
+                                        <a href="/mahasiswa/daftar-laporan">Daftar Laporan</a>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="InformasiKamar.html">
+                                <a href="/mahasiswa/informasi-kamar">
                                     <i class="fa fa-bed"></i>
                                     <span>Informasi Kamar</span>
                                 </a>
@@ -132,31 +132,16 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="text-center">
-                                                        <td>1</td>
-                                                        <td>Izin</td>
-                                                        <td>pulang kampung 5 hari</td>
-                                                        <td><img src="../assets/images/bukti/" alt="Bukti" class="rounded" width="100"></td>
-                                                        <td><span class="btn btn-warning btn-sm">Menunggu</span></td>
-                                                        <td>25 Oktober 2024 - 00:00:32</td>
+                                                    <!-- Loop data daftarLaporan dari Controller -->
+                                                    <tr th:each="laporan, iterStat : ${daftarLaporan}" class="text-center">
+                                                        <td th:text="${iterStat.index + 1}"></td>
+                                                        <td th:text="${laporan.jenis}"></td>
+                                                        <td th:text="${laporan.alasan}"></td>
+                                                        <td><img th:src="@{/assets/images/laporan-umum/} + ${laporan.buktiFoto}" alt="Bukti" class="rounded" width="250"></td>
+                                                        <td><span th:class="'btn btn-sm ' + (${laporan.status.toLowerCase()} == 'menunggu' ? 'btn-warning' : (${laporan.status.toLowerCase()} == 'setuju' ? 'btn-success' : 'btn-danger'))" th:text="${#strings.capitalize(laporan.status)}"></span></td>
+                                                        <td th:text="${laporan.formattedCreatedAt}"></td>
                                                     </tr>
-                                                    <tr class="text-center">
-                                                        <td>2</td>
-                                                        <td>Keluhan</td>
-                                                        <td>Dispenser Rusak</td>
-                                                        <td><img src="../assets/images/bukti/" alt="Bukti" class="rounded" width="100"></td>
-                                                        <td><span class="btn btn-success btn-sm">Setuju</span></td>
-                                                        <td>28 Oktober 2024 - 28:33:15</td>
-                                                    </tr>
-                                                    <tr class="text-center">
-                                                        <td>3</td>
-                                                        <td>Izin</td>
-                                                        <td>mau ikut UKM pulang jam 11 siang</td>
-                                                        <td><img src="../assets/images/bukti/" alt="Bukti" class="rounded" width="100"></td>
-                                                        <td><span class="btn btn-danger btn-sm">Tolak</span></td>
-                                                        <td>29 Oktober 2024 - 10:22:46</td>
-                                                    </tr>
-                                                </tbody>
+                                                </tbody>                                                
                                             </table>
                                         </div>
                                     </div>
@@ -165,16 +150,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <script th:inline="javascript">
-                    $(document).ready(function() {
-                        $('#table').DataTable({
-                            "order": [[0, 'asc']]  <!-- Format yang benar: [kolom, urutan] -->
-                        });
-                    });
-                </script>
-                
-                
+
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
@@ -196,5 +172,6 @@
         
         <!-- App JS -->
         <script src="../assets/js/app.min.js"></script>
+        <script src="../assets/js/custom.js"></script>
     </body>
 </html>

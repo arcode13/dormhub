@@ -44,11 +44,7 @@ public class LaporanService {
     }
 
     // Membuat laporan umum baru dengan penyimpanan file gambar
-    public LaporanUmum buatLaporanUmum(int helpdeskId, int userId, String jenis, String alasan, MultipartFile buktiFoto) throws IOException {
-        // Cari mahasiswa berdasarkan userId
-        Mahasiswa mahasiswa = mahasiswaRepository.findByUserId(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Mahasiswa tidak ditemukan untuk userId: " + userId));
-        
+    public LaporanUmum buatLaporanUmum(int mahasiswaId, String jenis, String alasan, MultipartFile buktiFoto) throws IOException {
         // Proses penyimpanan file gambar
         String fileName = null;
         if (buktiFoto != null && !buktiFoto.isEmpty()) {
@@ -66,8 +62,7 @@ public class LaporanService {
 
         // Simpan data ke database
         LaporanUmum laporan = new LaporanUmum();
-        laporan.setHelpdeskId(helpdeskId);
-        laporan.setMahasiswaId(mahasiswa.getId());
+        laporan.setMahasiswaId(mahasiswaId);
         laporan.setJenis(jenis);
         laporan.setAlasan(alasan);
         laporan.setBuktiFoto(fileName); // Simpan nama file ke database

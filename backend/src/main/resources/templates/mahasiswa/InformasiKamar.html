@@ -127,29 +127,11 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Kaila Fiorenza Gampo</td>
-                                                    <td>S1 Informatika</td>
-                                                    <td>08xxxxxxxxxx</td>
-                                                    <td>1</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Kaila Fiorenza Gampo</td>
-                                                    <td>S1 Rekayasa Perangkat Lunak</td>
-                                                    <td>08xxxxxxxxxx</td>
-                                                    <td>2</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Kaila Fiorenza Gampo</td>
-                                                    <td>S1 Desain Komunikasi Visual</td>
-                                                    <td>08xxxxxxxxxx</td>
-                                                    <td>3</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Kaila Fiorenza Gampo</td>
-                                                    <td>S1 Ilmu Komunikasi</td>
-                                                    <td>08xxxxxxxxxx</td>
-                                                    <td>4</td>
+                                                <tr th:each="mahasiswa : ${mahasiswaSekamar}">
+                                                    <td th:text="${mahasiswa.user.namaLengkap}"></td>
+                                                    <td th:text="${mahasiswa.jurusan}"></td>
+                                                    <td th:text="${mahasiswa.user.nomorHp}"></td>
+                                                    <td th:text="${mahasiswa.noKasur}"></td>
                                                 </tr>
                                             </tbody>
                                         </table>

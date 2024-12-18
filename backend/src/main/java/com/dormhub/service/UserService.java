@@ -76,6 +76,8 @@ public class UserService {
             mahasiswa.setJurusanId(jurusan.getId()); // Hubungkan dengan jurusan
             mahasiswa.setNoKamar(roomService.assignRoom()[0]);
             mahasiswa.setNoKasur(roomService.assignRoom()[1]);
+            mahasiswa.setIsCheckin(0);
+            mahasiswa.setIsCheckout(0);
             mahasiswaRepository.save(mahasiswa);
 
             return "Berhasil mendaftar";

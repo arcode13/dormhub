@@ -11,9 +11,6 @@ public class LaporanUmum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "helpdesk_id", nullable = false)
-    private int helpdeskId;
-
     @Column(name = "mahasiswa_id", nullable = false)
     private int mahasiswaId;
 
@@ -35,6 +32,9 @@ public class LaporanUmum {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Transient
+    private String formattedCreatedAt;
+
     // Getters and Setters
     public int getId() {
         return id;
@@ -42,14 +42,6 @@ public class LaporanUmum {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getHelpdeskId() {
-        return helpdeskId;
-    }
-
-    public void setHelpdeskId(int helpdeskId) {
-        this.helpdeskId = helpdeskId;
     }
 
     public int getMahasiswaId() {
@@ -98,6 +90,14 @@ public class LaporanUmum {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getFormattedCreatedAt() {
+        return formattedCreatedAt;
+    }
+    
+    public void setFormattedCreatedAt(String formattedCreatedAt) {
+        this.formattedCreatedAt = formattedCreatedAt;
     }
 
     public LocalDateTime getUpdatedAt() {
