@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2024 at 08:44 PM
+-- Generation Time: Dec 19, 2024 at 09:17 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -96,33 +96,25 @@ INSERT INTO `jurusan` (`id`, `nama`) VALUES
 
 CREATE TABLE `konfigurasi` (
   `id` int(11) NOT NULL,
-  `k_key` varchar(50) NOT NULL,
-  `k_value` text NOT NULL,
-  `favicon` varchar(255) DEFAULT NULL,
-  `footer` varchar(255) DEFAULT NULL,
-  `kamar` int(11) NOT NULL,
-  `kasur` int(11) NOT NULL,
-  `lantai` int(11) NOT NULL,
-  `logo` varchar(255) DEFAULT NULL,
-  `nama_gedung` varchar(255) DEFAULT NULL,
-  `nama_website` varchar(255) DEFAULT NULL
+  `k_key` varchar(255) NOT NULL,
+  `k_value` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `konfigurasi`
 --
 
-INSERT INTO `konfigurasi` (`id`, `k_key`, `k_value`, `favicon`, `footer`, `kamar`, `kasur`, `lantai`, `logo`, `nama_gedung`, `nama_website`) VALUES
-(1, 'web-favicon', 'favicon.ico', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(2, 'web-nama-website', 'DormHub', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(3, 'web-nama-gedung', 'Gedung Maxwell', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(4, 'web-logo', 'logo.png', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(5, 'web-lantai', '4', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(6, 'web-kamar', '14', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(7, 'web-kasur', '4', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(8, 'web-mulai-tgl-co', '2024-12-19', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(9, 'web-selesai-tgl-co', '2024-12-29', NULL, NULL, 0, 0, 0, NULL, NULL, NULL),
-(10, 'web-footer', 'Copyright © 2024 DormHub. All Rights Reserved', NULL, NULL, 0, 0, 0, NULL, NULL, NULL);
+INSERT INTO `konfigurasi` (`id`, `k_key`, `k_value`) VALUES
+(1, 'web-favicon', 'favicon.ico'),
+(2, 'web-nama-website', 'DormHub'),
+(3, 'web-nama-gedung', 'Gedung Maxwell'),
+(4, 'web-logo', 'logo.png'),
+(5, 'web-lantai', '4'),
+(6, 'web-kamar', '14'),
+(7, 'web-kasur', '4'),
+(8, 'web-mulai-tgl-co', '2024-12-19'),
+(9, 'web-selesai-tgl-co', '2024-12-29'),
+(10, 'web-footer', 'Copyright © 2024 DormHub. All Rights Reserved');
 
 -- --------------------------------------------------------
 
@@ -265,8 +257,8 @@ INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `
 (1, 'Andi Nugraha', 'mahasiswa@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121234567', 'Laki-Laki', 1, '2024-12-19 00:40:18', '2024-12-19 00:40:22'),
 (2, 'Rina Ayu', 'seniorresidence@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121238976', 'Perempuan', 2, '2024-12-19 01:37:54', '2024-12-19 01:38:04'),
 (3, 'Joko Santoso', 'helpdesk1@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121234578', 'Laki-Laki', 3, '2024-12-19 01:37:57', '2024-12-19 01:38:07'),
-(4, 'Rudi Wijaya', 'helpdesk2@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08127891234', 'Laki-Laki', 3, '2024-12-19 01:37:59', '0000-00-00 00:00:00'),
-(5, 'Fajar Sidiq', 'admin@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08123456789', 'Laki-Laki', 4, '2024-12-19 01:38:02', '0000-00-00 00:00:00');
+(4, 'Rudi Wijaya', 'helpdesk2@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08127891234', 'Laki-Laki', 3, '2024-12-19 01:37:59', '2024-12-19 14:30:57'),
+(5, 'Fajar Sidiq', 'admin@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08123456789', 'Laki-Laki', 4, '2024-12-19 01:38:02', '2024-12-19 14:31:00');
 
 --
 -- Indexes for dumped tables

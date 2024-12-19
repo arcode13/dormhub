@@ -33,21 +33,25 @@ public class RegisterController {
             @ModelAttribute User user,
             @RequestParam("jurusanId") int jurusanId,
             Model model) {
-        // Validasi jurusan
+        
         Jurusan jurusan = jurusanService.findById(jurusanId);
         if (jurusan == null) {
             model.addAttribute("error", "Jurusan tidak ditemukan");
+            model.addAttribute("user", user);
+            model.addAttribute("jurusanList", jurusanService.getAllJurusan());
             return "daftar";
         }
     
-        // Proses pendaftaran user
         String result = userService.registerUser(user, jurusan);
         if (result.equals("Berhasil mendaftar")) {
-            return "redirect:/login"; // Redirect ke halaman login
+            return "redirect:/login";
         } else {
             model.addAttribute("error", result);
-            return "daftar"; // Kembali ke halaman daftar jika ada error
+            model.addAttribute("user", user); 
+            model.addAttribute("jurusanList", jurusanService.getAllJurusan()); 
+            model.addAttribute("selectedJurusan", jurusanId); 
+            return "daftar";
         }
-    }
+    }    
     
 }

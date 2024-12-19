@@ -7,18 +7,16 @@ import jakarta.persistence.*;
 public class Konfigurasi {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String favicon;
-    private String namaWebsite;
-    private String namaGedung;
-    private String logo;
-    private int lantai;
-    private int kamar;
-    private int kasur;
-    private String footer;
+    @Column(name = "k_key", nullable = false, unique = true)
+    private String kKey;
 
-    // Getters and Setters
+    @Column(name = "k_value", nullable = false)
+    private String kValue;
+
+    // Getters dan Setters
     public int getId() {
         return id;
     }
@@ -27,67 +25,19 @@ public class Konfigurasi {
         this.id = id;
     }
 
-    public String getFavicon() {
-        return favicon;
+    public String getKKey() {
+        return kKey;
     }
 
-    public void setFavicon(String favicon) {
-        this.favicon = favicon;
+    public void setKKey(String kKey) {
+        this.kKey = kKey;
     }
 
-    public String getNamaWebsite() {
-        return namaWebsite;
+    public String getKValue() {
+        return kValue;
     }
 
-    public void setNamaWebsite(String namaWebsite) {
-        this.namaWebsite = namaWebsite;
-    }
-
-    public String getNamaGedung() {
-        return namaGedung;
-    }
-
-    public void setNamaGedung(String namaGedung) {
-        this.namaGedung = namaGedung;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public int getLantai() {
-        return lantai;
-    }
-
-    public void setLantai(int lantai) {
-        this.lantai = lantai;
-    }
-
-    public int getKamar() {
-        return kamar;
-    }
-
-    public void setKamar(int kamar) {
-        this.kamar = kamar;
-    }
-
-    public int getKasur() {
-        return kasur;
-    }
-
-    public void setKasur(int kasur) {
-        this.kasur = kasur;
-    }
-
-    public String getFooter() {
-        return footer;
-    }
-
-    public void setFooter(String footer) {
-        this.footer = footer;
+    public void setKValue(String kValue) {
+        this.kValue = kValue;
     }
 }

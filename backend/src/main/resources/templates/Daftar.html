@@ -45,7 +45,7 @@
                                                             <i class="icon-dual" data-feather="user"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" class="form-control" name="namaLengkap">
+                                                    <input type="text" class="form-control" name="namaLengkap" th:value="${user != null ? user.namaLengkap : ''}" required>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -56,7 +56,7 @@
                                                             <i class="icon-dual" data-feather="mail"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="email" class="form-control" name="email" placeholder="Contoh : dormhub@example.com" value="" required>
+                                                    <input type="email" class="form-control" name="email" placeholder="Contoh : dormhub@example.com" th:value="${user != null ? user.email : ''}" required>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -67,7 +67,7 @@
                                                             <i class="icon-dual" data-feather="phone"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="number" class="form-control" name="nomorHp" placeholder="Contoh : 081234567890" value="" required>
+                                                    <input type="number" class="form-control" name="nomorHp" placeholder="Contoh : 081234567890" th:value="${user != null ? user.nomorHp : ''}" required>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -80,9 +80,9 @@
                                                     </div>
                                                     <select class="form-control" name="jurusanId" required>
                                                         <option value="" disabled selected>Pilih Jurusan</option>
-                                                        <!-- Looping jurusan dari backend -->
                                                         <th:block th:each="jurusan : ${jurusanList}">
-                                                            <option th:value="${jurusan.id}" th:text="${jurusan.nama}"></option>
+                                                            <option th:value="${jurusan.id}" th:selected="${jurusan.id == selectedJurusan}" th:text="${jurusan.nama}">
+                                                            </option>
                                                         </th:block>
                                                     </select>
                                                 </div>
@@ -90,11 +90,11 @@
                                             <div class="form-group">
                                                 <label>Jenis Kelamin</label>
                                                 <div class="custom-control custom-radio mb-2">
-                                                    <input type="radio" class="custom-control-input" name="jenisKelamin" value="Laki-Laki" id="lakilaki" required>
+                                                    <input type="radio" class="custom-control-input" name="jenisKelamin" value="Laki-Laki" id="lakilaki" th:checked="${user != null && user.jenisKelamin == 'Laki-Laki'}" required>
                                                     <label class="custom-control-label" for="lakilaki">Laki-Laki</label>
                                                 </div>
                                                 <div class="custom-control custom-radio">
-                                                    <input type="radio" class="custom-control-input" name="jenisKelamin" value="Perempuan" id="perempuan" required>
+                                                    <input type="radio" class="custom-control-input" name="jenisKelamin" value="Perempuan" id="perempuan" th:checked="${user != null && user.jenisKelamin == 'Perempuan'}" required>
                                                     <label class="custom-control-label" for="perempuan">Perempuan</label>
                                                 </div>
                                             </div>

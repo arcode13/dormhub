@@ -27,55 +27,59 @@ public class UserService {
     private MahasiswaRepository mahasiswaRepository;
 
     @Autowired
-    private RoomService roomService; // Tambahan RoomService untuk logika lantai, kamar, dan kasur
+    private RoomService roomService; 
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder; // Memanfaatkan dependency injection untuk BCryptPasswordEncoder
+    private BCryptPasswordEncoder passwordEncoder; 
 
-    /**
-     * Mendaftarkan pengguna baru
-     *
-     * @param user Data user dari form pendaftaran
-     * @param jurusan Jurusan yang dipilih oleh pengguna
-     * @return Pesan sukses atau error
-     */
     public String registerUser(User user, Jurusan jurusan) {
-        // Validasi email sudah digunakan
+        if (!user.getNamaLengkap().matches("^[a-zA-Z\\s]+$")) {
+            return "Nama lengkap hanya boleh berisi huruf dan spasi";
+        }
+    
+        if (!user.getNomorHp().matches("^[0-9]{10,13}$")) {
+            return "Nomor HP harus berisi 10 hingga 13 digit angka tanpa simbol atau karakter khusus";
+        }
+    
+        if (user.getPassword().length() < 5) {
+            return "Password minimal 5 karakter";
+        }
+
+        if (user.getPassword().length() > 12) {
+            return "Password maksimal 12 karakter";
+        }
+    
         if (userRepository.existsByEmail(user.getEmail())) {
             return "Email sudah terdaftar";
         }
 
         try {
-            // Set waktu saat ini
             LocalDateTime now = LocalDateTime.now();
 
-            // Hash password menggunakan BCrypt
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-            // Set level untuk Mahasiswa (ambil dari DB jika perlu)
             Optional<Level> levelOpt = Optional.ofNullable(user.getLevel());
             if (levelOpt.isPresent()) {
-                // Set level default jika belum diatur
                 user.setLevel(levelOpt.get());
             } else {
                 Level level = new Level();
-                level.setId(1L); // Ganti dengan level "Mahasiswa" sesuai ID yang ada di DB
+                level.setId(1L);
                 user.setLevel(level);
             }
 
-            // Set waktu pembuatan dan pembaruan
             user.setCreatedAt(now);
             user.setUpdatedAt(now);
 
-            // Simpan user ke database
             User savedUser = userRepository.save(user);
 
-            // Simpan data mahasiswa dengan jurusan
             Mahasiswa mahasiswa = new Mahasiswa();
             mahasiswa.setUserId(savedUser.getId());
-            mahasiswa.setJurusanId(jurusan.getId()); // Hubungkan dengan jurusan
-            mahasiswa.setNoKamar(roomService.assignRoom()[0]);
-            mahasiswa.setNoKasur(roomService.assignRoom()[1]);
+            mahasiswa.setJurusanId(jurusan.getId()); 
+            
+            int[] roomAndBed = roomService.assignRoom();
+            mahasiswa.setNoKamar(roomAndBed[0]);
+            mahasiswa.setNoKasur(roomAndBed[1]);
+            
             mahasiswa.setIsCheckin(0);
             mahasiswa.setIsCheckout(0);
             mahasiswaRepository.save(mahasiswa);
@@ -87,13 +91,6 @@ public class UserService {
         }
     }
 
-    /**
-     * Autentikasi pengguna berdasarkan email dan password
-     *
-     * @param email Email pengguna
-     * @param password Password pengguna
-     * @return User object jika autentikasi berhasil, null jika gagal
-     */
     public User authenticate(String email, String password) {
         logger.debug("Mencoba autentikasi untuk email: {}", email);
 
@@ -114,7 +111,6 @@ public class UserService {
             logger.warn("User dengan email {} tidak ditemukan", email);
         }
 
-        return null; // Login gagal
+        return null; 
     }
-
 }
