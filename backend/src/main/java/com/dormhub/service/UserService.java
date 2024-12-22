@@ -34,11 +34,15 @@ public class UserService {
 
     public String registerUser(User user, Jurusan jurusan) {
         if (!user.getNamaLengkap().matches("^[a-zA-Z\\s]+$")) {
-            return "Nama lengkap hanya boleh berisi huruf dan spasi";
+            return "Nama lengkap hanya berisi huruf dan spasi";
         }
     
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return "Email sudah terdaftar";
+        }
+
         if (!user.getNomorHp().matches("^[0-9]{10,13}$")) {
-            return "Nomor HP harus berisi 10 hingga 13 digit angka tanpa simbol atau karakter khusus";
+            return "Nomor HP harus berisi 10 hingga 13 angka";
         }
     
         if (user.getPassword().length() < 5) {
@@ -47,10 +51,6 @@ public class UserService {
 
         if (user.getPassword().length() > 12) {
             return "Password maksimal 12 karakter";
-        }
-    
-        if (userRepository.existsByEmail(user.getEmail())) {
-            return "Email sudah terdaftar";
         }
 
         try {

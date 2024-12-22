@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2024 at 09:17 AM
+-- Generation Time: Dec 23, 2024 at 12:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -151,8 +151,8 @@ CREATE TABLE `laporan_umum` (
   `id` int(11) NOT NULL,
   `mahasiswa_id` int(11) NOT NULL,
   `jenis` varchar(255) DEFAULT NULL,
-  `alasan` text NOT NULL,
-  `bukti_foto` varchar(255) NOT NULL,
+  `alasan` varchar(255) NOT NULL,
+  `bukti_foto` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
@@ -163,9 +163,8 @@ CREATE TABLE `laporan_umum` (
 --
 
 INSERT INTO `laporan_umum` (`id`, `mahasiswa_id`, `jenis`, `alasan`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Izin', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '1734529807390_DormHub.drawio.png', 'menunggu', '2024-12-18 20:50:07', '2024-12-18 20:50:07'),
-(2, 1, 'Keluhan', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', '1734529863079_DormHub.drawio.png', 'menunggu', '2024-12-18 20:51:03', '2024-12-18 20:51:03'),
-(3, 1, 'Keluhan', 'hehe', '1734548772796_DormHub.drawio.png', 'menunggu', '2024-12-19 02:06:12', '2024-12-19 02:06:12');
+(1, 1, 'Izin', 'coba', NULL, 'menunggu', '2024-12-23 06:18:55', '2024-12-23 06:18:55'),
+(2, 1, 'Izin', 'haha', '1734910392321_DormHub.drawio.png', 'menunggu', '2024-12-23 06:33:12', '2024-12-23 06:33:12');
 
 -- --------------------------------------------------------
 
@@ -254,7 +253,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `nomor_hp`, `jenis_kelamin`, `level_id`, `created_at`, `updated_at`) VALUES
-(1, 'Andi Nugraha', 'mahasiswa@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121234567', 'Laki-Laki', 1, '2024-12-19 00:40:18', '2024-12-19 00:40:22'),
+(1, 'Andi Nugraha', 'mahasiswa@dormhub.web.id', '$2a$10$ZRpHwAqi.DNSSIac8ULQBugY4sWyjovD22ua6/G9k5tFIdGGSqLCu', '1734904024785_DormHub.drawio.png', '08121234567', 'Laki-Laki', 1, '2024-12-19 00:40:18', '2024-12-23 06:33:40'),
 (2, 'Rina Ayu', 'seniorresidence@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121238976', 'Perempuan', 2, '2024-12-19 01:37:54', '2024-12-19 01:38:04'),
 (3, 'Joko Santoso', 'helpdesk1@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121234578', 'Laki-Laki', 3, '2024-12-19 01:37:57', '2024-12-19 01:38:07'),
 (4, 'Rudi Wijaya', 'helpdesk2@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08127891234', 'Laki-Laki', 3, '2024-12-19 01:37:59', '2024-12-19 14:30:57'),
@@ -371,7 +370,7 @@ ALTER TABLE `laporan_barang`
 -- AUTO_INCREMENT for table `laporan_umum`
 --
 ALTER TABLE `laporan_umum`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `level`

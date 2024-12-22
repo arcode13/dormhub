@@ -74,9 +74,10 @@ public class SecurityConfig {
             .findFirst()
             .map(role -> {
                 switch (role) {
-                    case "ROLE_ADMIN": return "/admin/dashboard";
                     case "ROLE_MAHASISWA": return "/mahasiswa/dashboard";
+                    case "ROLE_SENIOR_RESIDENCE": return "/senior-residence/dashboard";
                     case "ROLE_HELP_DESK": return "/help-desk/dashboard";
+                    case "ROLE_ADMIN": return "/admin/dashboard";
                     default: return "/";
                 }
             })

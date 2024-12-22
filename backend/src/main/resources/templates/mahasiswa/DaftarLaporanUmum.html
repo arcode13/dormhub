@@ -47,10 +47,10 @@
             </div>
             <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-sm rounded-circle mr-2" alt="Profil">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-xs rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
                     <div class="media-body">
-                        <h6 class="pro-user-name mt-0 mb-0">John Doe</h6>
+                        <h6 class="pro-user-name mt-0 mb-0"><span th:text="${user.namaLengkap}"></span></h6>
                         <span class="pro-user-desc font-weight-600">Mahasiswa</span>
                     </div>
                     <div class="dropdown align-self-center profile-dropdown-menu">
@@ -58,12 +58,12 @@
                             <span data-feather="chevron-down"></span>
                         </a>
                         <div class="dropdown-menu profile-dropdown">
-                            <a href="Profil.html" class="dropdown-item notify-item">
+                            <a href="/mahasiswa/profil" class="dropdown-item notify-item">
                                 <i data-feather="user" class="icon-dual icon-xs mr-2"></i>
                                 <span>Profil</span>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <a href="../logout" class="dropdown-item notify-item">
                                 <i data-feather="log-out" class="icon-dual icon-xs mr-2"></i>
                                 <span>Keluar</span>
                             </a>
@@ -80,7 +80,7 @@
                                     <span>Beranda</span>
                                 </a>
                             </li>
-                            <li>
+                            <li th:if="${isCheckin == true}">
                                 <a href="javascript: void(0);">
                                     <i class="fa fa-file"></i>
                                     <span>Laporan</span>
@@ -95,7 +95,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li>
+                            <li th:if="${isCheckin == true}">
                                 <a href="/mahasiswa/informasi-kamar">
                                     <i class="fa fa-bed"></i>
                                     <span>Informasi Kamar</span>
@@ -117,6 +117,18 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
+                                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <span th:text="${error}"></span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span th:text="${success}"></span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="table-responsive">
@@ -137,7 +149,14 @@
                                                         <td th:text="${iterStat.index + 1}"></td>
                                                         <td th:text="${laporan.jenis}"></td>
                                                         <td th:text="${laporan.alasan}"></td>
-                                                        <td><img th:src="@{/assets/images/laporan-umum/} + ${laporan.buktiFoto}" alt="Bukti" class="rounded" width="250"></td>
+                                                        <td>
+                                                            <div th:if="${laporan.buktiFoto != null}">
+                                                                <img th:src="@{'/assets/images/laporan-umum/' + ${laporan.buktiFoto}}" alt="Bukti" class="rounded" width="250">
+                                                            </div>
+                                                            <div th:if="${laporan.buktiFoto == null}">
+                                                                Bukti tidak tersedia.
+                                                            </div>                                                            
+                                                        </td>
                                                         <td><span th:class="'btn btn-sm ' + (${laporan.status.toLowerCase()} == 'menunggu' ? 'btn-warning' : (${laporan.status.toLowerCase()} == 'setuju' ? 'btn-success' : 'btn-danger'))" th:text="${#strings.capitalize(laporan.status)}"></span></td>
                                                         <td th:text="${laporan.formattedCreatedAt}"></td>
                                                     </tr>

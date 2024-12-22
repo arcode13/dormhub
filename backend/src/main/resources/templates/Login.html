@@ -33,10 +33,19 @@
                                         </div>
                                         <h5 class="mb-0 mt-4">Selamat Datang!</h5>
                                         <p class="text-muted mt-1 mb-4">Masukan email dan password anda untuk mengakses <b>DormHub</b>.</p>
+                                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <span th:text="${error}"></span>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <span th:text="${success}"></span>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
                                         <form method="POST" action="/login" class="authentication-form">
-                                            <div class="form-group">
-                                                <p class="text-danger" th:text="${error}"></p>
-                                            </div>
                                             <div class="form-group">
                                                 <label class="form-control-label">Email</label>
                                                 <div class="input-group input-group-merge">

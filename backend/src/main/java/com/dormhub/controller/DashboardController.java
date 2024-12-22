@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class DashboardController {
     private MahasiswaRepository mahasiswaRepository;
 
     @GetMapping("/mahasiswa/dashboard")
-    public String mahasiswaDashboard(Model model) {
+    public String mahasiswaDashboard(Model model, RedirectAttributes redirectAttributes) {
         // Log awal masuk ke metode
         logger.info("Masuk ke metode mahasiswaDashboard.");
 
@@ -62,17 +63,22 @@ public class DashboardController {
                 Mahasiswa mahasiswa = mahasiswaOptional.get();
                 model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);
                 model.addAttribute("isCheckout", mahasiswa.getIsCheckout() == 1);
+                model.addAttribute("mahasiswa", mahasiswa);
+            } else {
+                model.addAttribute("isCheckin", false);
+                model.addAttribute("isCheckout", false);
+                model.addAttribute("mahasiswa", false);
             }
 
             String ucapan = getUcapan();
-            model.addAttribute("namaMahasiswa", user.getNamaLengkap());
+            model.addAttribute("user", user);
             model.addAttribute("ucapan", ucapan);
             model.addAttribute("laporanIzinBulanIni", jumlahLaporanIzin);
             model.addAttribute("laporanKeluhanBulanIni", jumlahLaporanKeluhan);
             model.addAttribute("totalLaporan", totalLaporan);
         } else {
             logger.warn("User dengan email {} tidak ditemukan.", email);
-            model.addAttribute("error", "User tidak ditemukan.");
+            redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
         }
 
         // Log akhir metode
@@ -92,47 +98,69 @@ public class DashboardController {
     }
 
     @GetMapping("/mahasiswa/checkin")
-    public String handleCheckin() {
+    public String handleCheckin(RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
+    
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-
+    
             Optional<Mahasiswa> mahasiswaOptional = mahasiswaRepository.findByUserId(user.getId());
             if (mahasiswaOptional.isPresent()) {
                 Mahasiswa mahasiswa = mahasiswaOptional.get();
-                mahasiswa.setIsCheckin(1); // Update check-in status
+    
+                // Validasi jika sudah check-in
+                if (mahasiswa.getIsCheckin() == 1) {
+                    redirectAttributes.addFlashAttribute("error", "Anda sudah melakukan check-in sebelumnya.");
+                    return "redirect:/mahasiswa/dashboard";
+                }
+    
+                mahasiswa.setIsCheckin(1); // Update status check-in
                 mahasiswaRepository.save(mahasiswa);
+    
+                redirectAttributes.addFlashAttribute("success", "Berhasil melakukan check-in");
+                return "redirect:/mahasiswa/dashboard";
             }
         }
-
+    
+        redirectAttributes.addFlashAttribute("error", "Data mahasiswa tidak ditemukan.");
         return "redirect:/mahasiswa/dashboard";
     }
-
+    
     @GetMapping("/mahasiswa/checkout")
-    public String handleCheckout() {
+    public String handleCheckout(RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
+    
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-
+    
             Optional<Mahasiswa> mahasiswaOptional = mahasiswaRepository.findByUserId(user.getId());
             if (mahasiswaOptional.isPresent()) {
                 Mahasiswa mahasiswa = mahasiswaOptional.get();
-                mahasiswa.setIsCheckout(1); // Update check-out status
+    
+                // Validasi jika sudah check-out
+                if (mahasiswa.getIsCheckout() == 1) {
+                    redirectAttributes.addFlashAttribute("error", "Anda sudah melakukan check-out sebelumnya.");
+                    return "redirect:/mahasiswa/dashboard";
+                }
+    
+                mahasiswa.setIsCheckout(1); // Update status check-out
                 mahasiswaRepository.save(mahasiswa);
+    
+                redirectAttributes.addFlashAttribute("success", "Berhasil melakukan check-out");
+                return "redirect:/mahasiswa/dashboard";
             }
         }
-
+    
+        redirectAttributes.addFlashAttribute("error", "Data mahasiswa tidak ditemukan.");
         return "redirect:/mahasiswa/dashboard";
-    }
+    }    
 
     @GetMapping("/help-desk/dashboard")
-    public String helpDeskDashboard(Model model) {
+    public String helpDeskDashboard(Model model, RedirectAttributes redirectAttributes) {
         // Log awal masuk ke metode
         logger.info("Masuk ke metode mahasiswaDashboard.");
 
@@ -153,7 +181,7 @@ public class DashboardController {
             model.addAttribute("ucapan", ucapan);
         } else {
             logger.warn("User dengan email {} tidak ditemukan.", email);
-            model.addAttribute("error", "User tidak ditemukan.");
+            redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
         }
 
         return "help-desk/dashboard";

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,6 +44,7 @@ public class LoginController {
     public String login(
             @RequestParam("email") String email,
             @RequestParam("password") String password,
+            RedirectAttributes redirectAttributes, 
             Model model) {
 
         logger.debug("Login attempt dengan email: {}", email);
@@ -66,12 +68,12 @@ public class LoginController {
                 case "help desk":
                     return "redirect:/help-desk/dashboard";
                 default:
-                    model.addAttribute("error", "Level user tidak valid");
+                    redirectAttributes.addFlashAttribute("error", "Level tidak valid.");
                     return "login";
             }
         } else {
             logger.warn("Login gagal untuk email: {}", email);
-            model.addAttribute("error", "Email atau password salah");
+            redirectAttributes.addFlashAttribute("error", "Email atau password salah.");
             return "login";
         }
     }
