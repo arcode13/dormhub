@@ -44,17 +44,19 @@ public class InformasiKamarController {
                 int noKamar = mahasiswa.getNoKamar();
                 
                 // Mengambil daftar mahasiswa yang satu kamar
-                List<Mahasiswa> mahasiswaSekamar = mahasiswaRepository.findByNoKamar(noKamar);
+                List<Mahasiswa> mahasiswaSekamar = mahasiswaRepository.findByNoKamarWithUser(noKamar);
                 
                 // Mengirimkan data ke view (HTML)
+                model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);
+                model.addAttribute("isCheckout", mahasiswa.getIsCheckout() == 1);
+                model.addAttribute("user", user);
                 model.addAttribute("mahasiswaSekamar", mahasiswaSekamar);
-                model.addAttribute("noKamar", noKamar);
-                model.addAttribute("noKasur", mahasiswa.getNoKasur());
+                model.addAttribute("noKamar", mahasiswa.getNoKamar());
             } else {
-                model.addAttribute("error", "Data mahasiswa tidak ditemukan.");
+                model.addAttribute("error", "Mahasiswa tidak ditemukan.");
             }
         } else {
-            model.addAttribute("error", "Data pengguna tidak ditemukan.");
+            model.addAttribute("error", "User tidak ditemukan.");
         }
 
         return "mahasiswa/InformasiKamar";

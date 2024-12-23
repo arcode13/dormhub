@@ -3,6 +3,7 @@ package com.dormhub.repository;
 import com.dormhub.model.Mahasiswa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +21,7 @@ public interface MahasiswaRepository extends JpaRepository<Mahasiswa, Integer> {
     Optional<Mahasiswa> findByUserId(int userId);
     
     List<Mahasiswa> findByNoKamar(int noKamar);
+
+    @Query("SELECT m FROM Mahasiswa m JOIN FETCH m.user WHERE m.noKamar = :noKamar")
+    List<Mahasiswa> findByNoKamarWithUser(@Param("noKamar") int noKamar);
 }

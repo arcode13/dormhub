@@ -28,7 +28,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Disable CSRF if not needed
             .headers(headers -> headers.frameOptions().sameOrigin()) // Needed for iframes (optional)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/daftar", "/forgot-password", "/reset-password", "/assets/**", "/css/**", "/js/**", "/img/**").permitAll() // Public pages
+                .requestMatchers("/", "/login", "/register", "/forgot-password", "/reset-password", "/assets/**", "/css/**", "/js/**", "/img/**").permitAll() // Public pages
                 .anyRequest().authenticated() // All other pages require authentication
             )
             .formLogin(login -> login

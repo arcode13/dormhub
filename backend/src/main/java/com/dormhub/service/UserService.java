@@ -33,65 +33,76 @@ public class UserService {
     private BCryptPasswordEncoder passwordEncoder; 
 
     public String registerUser(User user, Jurusan jurusan) {
+        // Validasi Nama
         if (!user.getNamaLengkap().matches("^[a-zA-Z\\s]+$")) {
             return "Nama lengkap hanya berisi huruf dan spasi";
         }
     
+        // Validasi Email
         if (userRepository.existsByEmail(user.getEmail())) {
             return "Email sudah terdaftar";
         }
-
+    
+        // Validasi Nomor HP
         if (!user.getNomorHp().matches("^[0-9]{10,13}$")) {
             return "Nomor HP harus berisi 10 hingga 13 angka";
         }
     
+        // Validasi Password
         if (user.getPassword().length() < 5) {
             return "Password minimal 5 karakter";
         }
-
         if (user.getPassword().length() > 12) {
             return "Password maksimal 12 karakter";
         }
-
+    
         try {
             LocalDateTime now = LocalDateTime.now();
-
+    
+            // Encode password
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-            Optional<Level> levelOpt = Optional.ofNullable(user.getLevel());
-            if (levelOpt.isPresent()) {
-                user.setLevel(levelOpt.get());
-            } else {
+    
+            // Set Level default (Mahasiswa)
+            if (user.getLevel() == null) {
                 Level level = new Level();
-                level.setId(1L);
+                level.setId(1L); // Pastikan ID 1 untuk "Mahasiswa"
                 user.setLevel(level);
             }
-
+    
             user.setToken(null);
-            
             user.setCreatedAt(now);
             user.setUpdatedAt(now);
-
+    
+            // Simpan User
             User savedUser = userRepository.save(user);
-
+    
+            // Validasi Jurusan
+            if (jurusan == null || jurusan.getId() == 0) {
+                throw new IllegalArgumentException("Jurusan tidak valid");
+            }
+    
+            // Buat entitas Mahasiswa
             Mahasiswa mahasiswa = new Mahasiswa();
-            mahasiswa.setUserId(savedUser.getId());
-            mahasiswa.setJurusanId(jurusan.getId()); 
-            
+            mahasiswa.setUser(savedUser);
+            mahasiswa.setJurusan(jurusan); // Set relasi ManyToOne dengan entitas Jurusan
+    
+            // Dapatkan nomor kamar dan kasur dari RoomService
             int[] roomAndBed = roomService.assignRoom();
             mahasiswa.setNoKamar(roomAndBed[0]);
             mahasiswa.setNoKasur(roomAndBed[1]);
-            
+    
             mahasiswa.setIsCheckin(0);
             mahasiswa.setIsCheckout(0);
+    
+            // Simpan Mahasiswa
             mahasiswaRepository.save(mahasiswa);
-
+    
             return "Berhasil mendaftar";
         } catch (Exception e) {
-            logger.error("Terjadi kesalahan saat mendaftar user: ", e);
+            logger.error("Terjadi kesalahan saat mendaftar : ", e);
             return "Terjadi kesalahan saat mendaftar: " + e.getMessage();
         }
-    }
+    }    
 
     public User authenticate(String email, String password) {
         logger.debug("Mencoba autentikasi untuk email: {}", email);

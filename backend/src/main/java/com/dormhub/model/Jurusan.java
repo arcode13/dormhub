@@ -10,7 +10,7 @@ public class Jurusan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(name = "nama", nullable = false)
     private String nama;
 
     // Getters and Setters

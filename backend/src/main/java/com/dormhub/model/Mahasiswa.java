@@ -10,11 +10,16 @@ public class Mahasiswa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false) // Hindari duplikasi
     private int userId;
 
-    @Column(name = "jurusan_id", nullable = false)
-    private int jurusanId;
+    @ManyToOne
+    @JoinColumn(name = "jurusan_id", nullable = false)
+    private Jurusan jurusan;
 
     @Column(name = "no_kamar", nullable = false)
     private int noKamar;
@@ -37,6 +42,14 @@ public class Mahasiswa {
         this.id = id;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public int getUserId() {
         return userId;
     }
@@ -45,12 +58,12 @@ public class Mahasiswa {
         this.userId = userId;
     }
 
-    public int getJurusanId() {
-        return jurusanId;
+    public Jurusan getJurusan() {
+        return jurusan;
     }
 
-    public void setJurusanId(int jurusanId) {
-        this.jurusanId = jurusanId;
+    public void setJurusan(Jurusan jurusan) {
+        this.jurusan = jurusan;
     }
 
     public int getNoKamar() {

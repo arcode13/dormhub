@@ -22,14 +22,14 @@ public class RegisterController {
     @Autowired
     private JurusanService jurusanService; // Tambahkan service untuk mengambil data jurusan
 
-    @GetMapping("/daftar")
+    @GetMapping("/register")
     public String daftarPage(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("jurusanList", jurusanService.getAllJurusan()); // Kirim daftar jurusan ke view
-        return "daftar"; // File daftar.html
+        return "register"; // File register.html
     }
 
-    @PostMapping("/daftar")
+    @PostMapping("/register")
     public String daftarUser(
             @ModelAttribute User user,
             @RequestParam("jurusanId") int jurusanId,
@@ -41,7 +41,7 @@ public class RegisterController {
             model.addAttribute("error", "Jurusan tidak ditemukan.");
             model.addAttribute("user", user);
             model.addAttribute("jurusanList", jurusanService.getAllJurusan());
-            return "daftar";
+            return "register";
         }
     
         String result = userService.registerUser(user, jurusan);
@@ -53,7 +53,7 @@ public class RegisterController {
             model.addAttribute("user", user); 
             model.addAttribute("jurusanList", jurusanService.getAllJurusan()); 
             model.addAttribute("selectedJurusan", jurusanId); 
-            return "daftar";
+            return "register";
         }
     }    
     
