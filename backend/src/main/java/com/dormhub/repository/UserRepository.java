@@ -16,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Integer> { // Gunaka
     // Tambahkan query method jika diperlukan
     Optional<User> findByEmailAndLevel_Id(String email, Integer levelId); // Mencari user berdasarkan email dan level
 
+    Optional<User> findByToken(String token);
+
     // Contoh query dengan kustom SQL jika dibutuhkan
     // @Query("SELECT u FROM User u WHERE u.email = ?1 AND u.level.id = ?2")
     // Optional<User> findUserByEmailAndLevel(String email, Integer levelId);

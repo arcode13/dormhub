@@ -27,7 +27,7 @@ public class LoginController {
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute("error", "Email atau password salah");
+            model.addAttribute("error", "Email atau password salah.");
         }
         return "login"; // Menampilkan halaman login.html
     }

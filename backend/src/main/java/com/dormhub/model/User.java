@@ -30,32 +30,18 @@ public class User {
     @Column(name = "jenis_kelamin", nullable = false)
     private String jenisKelamin;
 
+    @ManyToOne
+    @JoinColumn(name = "level_id", nullable = false) // Foreign key ke tabel level
+    private Level level;
+
+    @Column(name = "token", nullable = true)
+    private String token;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "level_id", nullable = false) // Foreign key ke tabel level
-    private Level level;
-
-     // Getters and Setters
-     public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     // Getters and Setters
     public int getId() {
@@ -120,5 +106,29 @@ public class User {
 
     public void setLevel(Level level) {
         this.level = level;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

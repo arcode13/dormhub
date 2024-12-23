@@ -67,6 +67,8 @@ public class UserService {
                 user.setLevel(level);
             }
 
+            user.setToken(null);
+            
             user.setCreatedAt(now);
             user.setUpdatedAt(now);
 
