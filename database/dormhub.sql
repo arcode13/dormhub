@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2024 at 12:34 AM
+-- Generation Time: Dec 23, 2024 at 05:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -244,6 +244,7 @@ CREATE TABLE `users` (
   `nomor_hp` varchar(255) NOT NULL,
   `jenis_kelamin` varchar(255) NOT NULL,
   `level_id` int(11) NOT NULL,
+  `token` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -252,12 +253,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `nomor_hp`, `jenis_kelamin`, `level_id`, `created_at`, `updated_at`) VALUES
-(1, 'Andi Nugraha', 'mahasiswa@dormhub.web.id', '$2a$10$ZRpHwAqi.DNSSIac8ULQBugY4sWyjovD22ua6/G9k5tFIdGGSqLCu', '1734904024785_DormHub.drawio.png', '08121234567', 'Laki-Laki', 1, '2024-12-19 00:40:18', '2024-12-23 06:33:40'),
-(2, 'Rina Ayu', 'seniorresidence@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121238976', 'Perempuan', 2, '2024-12-19 01:37:54', '2024-12-19 01:38:04'),
-(3, 'Joko Santoso', 'helpdesk1@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121234578', 'Laki-Laki', 3, '2024-12-19 01:37:57', '2024-12-19 01:38:07'),
-(4, 'Rudi Wijaya', 'helpdesk2@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08127891234', 'Laki-Laki', 3, '2024-12-19 01:37:59', '2024-12-19 14:30:57'),
-(5, 'Fajar Sidiq', 'admin@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08123456789', 'Laki-Laki', 4, '2024-12-19 01:38:02', '2024-12-19 14:31:00');
+INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `nomor_hp`, `jenis_kelamin`, `level_id`, `token`, `created_at`, `updated_at`) VALUES
+(1, 'Andi Nugraha', 'mahasiswa@dormhub.web.id', '$2a$10$ZRpHwAqi.DNSSIac8ULQBugY4sWyjovD22ua6/G9k5tFIdGGSqLCu', '1734904024785_DormHub.drawio.png', '08121234567', 'Laki-Laki', 1, '8262a610-dcaf-45f8-82d0-91800e155099', '2024-12-19 00:40:18', '2024-12-23 06:33:40'),
+(2, 'Rina Ayu', 'seniorresidence@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121238976', 'Perempuan', 2, NULL, '2024-12-19 01:37:54', '2024-12-19 01:38:04'),
+(3, 'Joko Santoso', 'helpdesk1@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121234578', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:57', '2024-12-19 01:38:07'),
+(4, 'Rudi Wijaya', 'helpdesk2@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08127891234', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:59', '2024-12-19 14:30:57'),
+(5, 'Fajar Sidiq', 'admin@dormhub.web.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08123456789', 'Laki-Laki', 4, NULL, '2024-12-19 01:38:02', '2024-12-19 14:31:00');
 
 --
 -- Indexes for dumped tables
