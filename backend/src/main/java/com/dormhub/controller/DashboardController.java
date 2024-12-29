@@ -3,12 +3,17 @@ package com.dormhub.controller;
 import com.dormhub.model.Mahasiswa;
 import com.dormhub.model.User;
 import com.dormhub.repository.MahasiswaRepository;
+import com.dormhub.repository.HelpDeskRepository;
 import com.dormhub.repository.UserRepository;
 import com.dormhub.repository.LaporanBarangRepository;
 import com.dormhub.service.LaporanService;
+import com.dormhub.model.HelpDesk;
 import com.dormhub.model.LaporanBarang;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Controller
@@ -34,8 +40,17 @@ public class DashboardController {
 
     @Autowired
     private MahasiswaRepository mahasiswaRepository;
+
+    @Autowired
+    private HelpDeskRepository helpDeskRepository;
+
     @Autowired
     private LaporanBarangRepository laporanBarangRepository;
+
+    private String capitalize(String input) {
+        if (input == null || input.isEmpty()) return input;
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+    }    
 
     @GetMapping("/mahasiswa/dashboard")
     public String mahasiswaDashboard(Model model, RedirectAttributes redirectAttributes) {
@@ -183,16 +198,44 @@ public class DashboardController {
             logger.debug("User ditemukan dengan ID: {}", userId);
     
             String ucapan = getUcapan();
-            model.addAttribute("namaHelpDesk", user.getNamaLengkap());
+            model.addAttribute("user", user);
             model.addAttribute("ucapan", ucapan);
     
-            // Tambahkan data laporan barang ke model
-            List<LaporanBarang> laporanBarangList = laporanBarangRepository.findByHelpdeskId(userId);
+            // Ambil daftar mahasiswa dari repository
+            List<Mahasiswa> mahasiswaList = mahasiswaRepository.findAll();
+            model.addAttribute("mahasiswaList", mahasiswaList);
+
+            // 3. Dapatkan mahasiswa_id berdasarkan user_id
+            Optional<HelpDesk> helpDeskOptional = helpDeskRepository.findByUserId(userId);
+            if (!helpDeskOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "Help Desk tidak ditemukan.");
+                return "redirect:/mahasiswa/daftar-laporan";
+            }
+
+            HelpDesk helpDesk = helpDeskOptional.get();
+            int helpDeskId = helpDesk.getId();
+            
+            List<LaporanBarang> laporanBarangList = laporanBarangRepository.findByHelpdeskId(helpDeskId);
+
+            // **Format tanggal ke format Indonesia**
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy - HH:mm", new java.util.Locale("id", "ID"));
+            for (LaporanBarang laporan : laporanBarangList) {
+                String formattedDate = laporan.getCreatedAt().format(formatter);
+                laporan.setStatus(capitalize(laporan.getStatus()));
+                laporan.setFormattedCreatedAt(formattedDate);
+
+                Optional<Mahasiswa> mahasiswaOptional = mahasiswaRepository.findById(laporan.getMahasiswaId());
+                if (mahasiswaOptional.isPresent()) {
+                    Mahasiswa mahasiswa = mahasiswaOptional.get();
+                    laporan.setNamaLengkap(mahasiswa.getUser().getNamaLengkap());
+                    laporan.setNoKamar(mahasiswa.getNoKamar());
+                }
+            }
+
             model.addAttribute("laporanBarangList", laporanBarangList);
         } else {
             logger.warn("User dengan email {} tidak ditemukan.", email);
             redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
-            return "redirect:/error"; // Redirect ke halaman error jika user tidak ditemukan
         }
     
         return "help-desk/Dashboard"; // Pastikan ini mengarah ke view yang benar

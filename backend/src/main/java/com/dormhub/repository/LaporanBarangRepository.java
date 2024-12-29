@@ -8,12 +8,6 @@ import java.util.List;
 
 @Repository
 public interface LaporanBarangRepository extends JpaRepository<LaporanBarang, Integer> {
-
-    // existing methods
-
-
-
     List<LaporanBarang> findByHelpdeskId(int helpdeskId);
-
 }
 

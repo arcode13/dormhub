@@ -1,11 +1,15 @@
 package com.dormhub.controller;
 
+import com.dormhub.model.LaporanBarang;
 import com.dormhub.model.LaporanUmum;
 import com.dormhub.model.Mahasiswa;
+import com.dormhub.model.HelpDesk;
 import com.dormhub.model.User;
 import com.dormhub.service.LaporanService;
 import com.dormhub.repository.UserRepository;
+import com.dormhub.repository.LaporanBarangRepository;
 import com.dormhub.repository.LaporanUmumRepository;
+import com.dormhub.repository.HelpDeskRepository;
 import com.dormhub.repository.MahasiswaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Optional;
@@ -40,7 +45,13 @@ public class LaporanController {
     private MahasiswaRepository mahasiswaRepository;
 
     @Autowired
+    private HelpDeskRepository helpDeskRepository;
+
+    @Autowired
     private LaporanUmumRepository laporanUmumRepository;
+
+    @Autowired
+    private LaporanBarangRepository laporanBarangRepository;
 
     private String capitalize(String input) {
         if (input == null || input.isEmpty()) return input;
@@ -104,24 +115,32 @@ public class LaporanController {
             String buktiPath = null;
 
             if (buktiFoto != null && !buktiFoto.isEmpty()) {
-                // Validasi file
-                String contentType = buktiFoto.getContentType();
+                // Validasi ukuran file maksimal 2 MB
                 long maxFileSize = 2 * 1024 * 1024; // 2 MB
-
                 if (buktiFoto.getSize() > maxFileSize) {
-                    redirectAttributes.addFlashAttribute("error", "Ukuran file maksimal 2 MB");
-                    return "redirect:/mahasiswa/buat-laporan-umum";
+                    redirectAttributes.addFlashAttribute("error", "Ukuran bukti foto maksimal 2 MB.");
+                    return "redirect:/mahasiswa/dashboard";
                 }
 
-                if (!contentType.equalsIgnoreCase("image/jpeg") &&
-                    !contentType.equalsIgnoreCase("image/jpg") &&
-                    !contentType.equalsIgnoreCase("image/png")) {
-                    redirectAttributes.addFlashAttribute("error", "Format file hanya boleh JPG, JPEG, atau PNG");
-                    return "redirect:/mahasiswa/buat-laporan-umum";
+                // Validasi content type
+                String contentType = buktiFoto.getContentType();
+                if (contentType == null || 
+                    (!contentType.equalsIgnoreCase("image/jpeg") &&
+                     !contentType.equalsIgnoreCase("image/jpg") &&
+                     !contentType.equalsIgnoreCase("image/png"))) {
+                    redirectAttributes.addFlashAttribute("error", "Format bukti foto hanya boleh JPG, JPEG, atau PNG");
+                    return "redirect:/mahasiswa/dashboard";
                 }
-
-                // Simpan file
-                String fileName = System.currentTimeMillis() + "_" + buktiFoto.getOriginalFilename().replaceAll("\\s+", "_");
+            
+                // Validasi nama file
+                String originalFilename = buktiFoto.getOriginalFilename();
+                if (originalFilename == null || originalFilename.isBlank()) {
+                    redirectAttributes.addFlashAttribute("error", "Nama bukti foto tidak valid.");
+                    return "redirect:/mahasiswa/dashboard";
+                }
+            
+                // Simpan file dengan nama unik
+                String fileName = System.currentTimeMillis() + "_" + originalFilename.replaceAll("\\s+", "_");
                 Path uploadPath = Path.of("src/main/resources/static/assets/images/laporan-umum/" + fileName);
                 Files.write(uploadPath, buktiFoto.getBytes());
                 buktiPath = fileName;
@@ -130,13 +149,13 @@ public class LaporanController {
             // 5. Panggil service untuk menyimpan laporan
             laporanService.buatLaporanUmum(mahasiswaId, kategori, keterangan, buktiPath);
 
+            redirectAttributes.addFlashAttribute("success", "Laporan berhasil dibuat");
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan saat membuat laporan.");
             return "redirect:/mahasiswa/buat-laporan-umum";
         }
 
-        redirectAttributes.addFlashAttribute("success", "Laporan berhasil dibuat");
         return "redirect:/mahasiswa/daftar-laporan";
     }
 
@@ -190,5 +209,101 @@ public class LaporanController {
         }
 
         return "mahasiswa/DaftarLaporanUmum";
+    }
+
+    @PostMapping("/help-desk/buat-laporan-barang")
+    public String buatLaporanBarang(
+            @RequestParam("mahasiswaId") int mahasiswaId,
+            @RequestParam("jenis") String jenis,
+            @RequestParam(value = "buktiFoto", required = false) MultipartFile buktiFoto,
+            RedirectAttributes redirectAttributes,
+            Principal principal) {
+    
+        try {
+            // 1. Ambil email user yang login
+            String email = principal.getName();
+    
+            // 2. Dapatkan user berdasarkan email
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            if (!userOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
+                return "redirect:/help-desk/dashboard";
+            }
+
+            User user = userOptional.get();
+            int userId = user.getId();
+
+            // 3. Dapatkan helpdesk_id berdasarkan user_id
+            Optional<HelpDesk> helpDeskOptional = helpDeskRepository.findByUserId(userId);
+            if (!helpDeskOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "Mahasiswa tidak ditemukan.");
+                return "redirect:/help-desk/dashboard";
+            }
+
+            HelpDesk helpDesk = helpDeskOptional.get();
+            int helpDeskId = helpDesk.getId();
+    
+            // 3. Validasi mahasiswa
+            Optional<Mahasiswa> mahasiswaOptional = mahasiswaRepository.findById(mahasiswaId);
+            if (!mahasiswaOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "Mahasiswa tidak ditemukan.");
+                return "redirect:/help-desk/dashboard";
+            }
+    
+            // 4. Simpan laporan ke dalam tabel laporan_barang
+            String buktiPath = null;
+    
+            if (buktiFoto != null && !buktiFoto.isEmpty()) {
+                // Validasi ukuran file maksimal 2 MB
+                long maxFileSize = 2 * 1024 * 1024; // 2 MB
+                if (buktiFoto.getSize() > maxFileSize) {
+                    redirectAttributes.addFlashAttribute("error", "Ukuran bukti foto maksimal 2 MB.");
+                    return "redirect:/help-desk/dashboard";
+                }
+
+                // Validasi content type
+                String contentType = buktiFoto.getContentType();
+                if (contentType == null || 
+                    (!contentType.equalsIgnoreCase("image/jpeg") &&
+                     !contentType.equalsIgnoreCase("image/jpg") &&
+                     !contentType.equalsIgnoreCase("image/png"))) {
+                    redirectAttributes.addFlashAttribute("error", "Format bukti foto hanya boleh JPG, JPEG, atau PNG");
+                    return "redirect:/help-desk/dashboard";
+                }
+            
+                // Validasi nama file
+                String originalFilename = buktiFoto.getOriginalFilename();
+                if (originalFilename == null || originalFilename.isBlank()) {
+                    redirectAttributes.addFlashAttribute("error", "Nama bukti foto tidak valid.");
+                    return "redirect:/help-desk/dashboard";
+                }
+            
+                // Simpan file dengan nama unik
+                String fileName = System.currentTimeMillis() + "_" + originalFilename.replaceAll("\\s+", "_");
+                Path uploadPath = Path.of("src/main/resources/static/assets/images/laporan-barang/" + fileName);
+                Files.write(uploadPath, buktiFoto.getBytes());
+                buktiPath = fileName;
+            }
+    
+            // 5. Simpan laporan ke database
+            LaporanBarang laporanBarang = new LaporanBarang();
+            laporanBarang.setHelpdeskId(helpDeskId);
+            laporanBarang.setMahasiswaId(mahasiswaId);
+            laporanBarang.setJenis(jenis);
+            laporanBarang.setBuktiFoto(buktiPath);
+            laporanBarang.setStatus("menunggu");
+            laporanBarang.setCreatedAt(LocalDateTime.now());
+            laporanBarang.setUpdatedAt(LocalDateTime.now());
+    
+            laporanBarangRepository.save(laporanBarang);
+    
+            // 6. Berikan pesan sukses
+            redirectAttributes.addFlashAttribute("success", "Laporan barang berhasil dibuat");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan saat membuat laporan barang.");
+        }
+    
+        return "redirect:/help-desk/dashboard";
     }
 }

@@ -177,12 +177,12 @@
                             for (let index = 0; index < imageFiles.length; index++) {
                                 const file = imageFiles[index];
                                 if (file.size > maxFileSize) {
-                                    alert('Ukuran file maksimal 2 MB');
+                                    alert('Ukuran bukti foto maksimal 2 MB');
                                     imagesFile.value = '';
                                     return;
                                 }
                                 if (!allowedExtensions.includes(file.type)) {
-                                    alert('Format file hanya boleh JPG, JPEG, atau PNG');
+                                    alert('Format bukti foto hanya boleh JPG, JPEG, atau PNG');
                                     imagesFile.value = '';
                                     return;
                                 }

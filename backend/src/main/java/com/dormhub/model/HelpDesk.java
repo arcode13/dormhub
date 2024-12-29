@@ -10,9 +10,12 @@ public class HelpDesk {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // Assuming the helpdesk has a relation to a User
+    private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false) // Hindari duplikasi
+    private int userId;
 
     // Getters and setters
     public int getId() {
@@ -29,5 +32,13 @@ public class HelpDesk {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

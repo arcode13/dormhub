@@ -21,7 +21,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping("/mahasiswa")
 public class ProfilController {
 
     @Autowired
@@ -35,10 +34,10 @@ public class ProfilController {
 
     private static final String IMAGE_DIR = "src/main/resources/static/assets/images/users/";
 
-    @GetMapping("/profil")
+    @GetMapping("/mahasiswa/profil")
     public String profilPage(Principal principal, Model model) {
         String email = principal.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
         Mahasiswa mahasiswa = mahasiswaRepository.findByUserId(user.getId()).orElse(null);
     
         if (mahasiswa != null) {
@@ -56,10 +55,10 @@ public class ProfilController {
         return "mahasiswa/Profil";
     }
 
-    @PostMapping("/profil/ubah-foto")
+    @PostMapping("/mahasiswa/profil/ubah-foto")
     public String ubahFotoProfil(@RequestParam("fotoProfil") MultipartFile fotoProfil, Principal principal, RedirectAttributes redirectAttributes) {
         String email = principal.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
     
         try {
             if (!fotoProfil.isEmpty()) {
@@ -72,31 +71,41 @@ public class ProfilController {
     
                 // Validasi format file
                 String contentType = fotoProfil.getContentType();
-                if (!contentType.equalsIgnoreCase("image/jpeg") &&
+                if (contentType == null || 
+                    (!contentType.equalsIgnoreCase("image/jpeg") &&
                     !contentType.equalsIgnoreCase("image/jpg") &&
-                    !contentType.equalsIgnoreCase("image/png")) {
-                    redirectAttributes.addFlashAttribute("error", "Format file hanya boleh JPG, JPEG, atau PNG.");
-                    return "redirect:/mahasiswa/profil";
+                    !contentType.equalsIgnoreCase("image/png"))) {
+                    redirectAttributes.addFlashAttribute("error", "Format foto profil hanya boleh JPG, JPEG, atau PNG.");
+                    return "redirect:/help-desk/profil";
                 }
-    
+
+                // Validasi nama file
+                String originalFilename = fotoProfil.getOriginalFilename();
+                if (originalFilename == null || originalFilename.isBlank()) {
+                    redirectAttributes.addFlashAttribute("error", "Nama foto profil tidak valid.");
+                    return "redirect:/help-desk/profil";
+                }
+
                 // Buat direktori jika belum ada
                 File directory = new File(IMAGE_DIR);
                 if (!directory.exists()) {
                     directory.mkdirs();
                 }
-    
+
                 // Generate nama file unik
-                String fileName = System.currentTimeMillis() + "_" + fotoProfil.getOriginalFilename().replaceAll("\\s+", "_");
-    
+                String fileName = System.currentTimeMillis() + "_" + originalFilename.replaceAll("\\s+", "_");
+
                 // Simpan file ke direktori
                 Path filePath = Paths.get(IMAGE_DIR + fileName);
                 Files.write(filePath, fotoProfil.getBytes());
-    
+
                 // Hapus foto lama jika ada
                 String oldFotoProfil = user.getFotoProfil();
                 if (oldFotoProfil != null) {
                     File oldFile = new File(IMAGE_DIR + oldFotoProfil);
-                    oldFile.delete();
+                    if (oldFile.exists()) {
+                        oldFile.delete();
+                    }
                 }
     
                 // Update foto profil di database
@@ -114,7 +123,7 @@ public class ProfilController {
         return "redirect:/mahasiswa/profil";
     }    
 
-    @PostMapping("/profil/ubah-data")
+    @PostMapping("/mahasiswa/profil/ubah-data")
     public String ubahDataProfil(
             @RequestParam("namaLengkap") String namaLengkap,
             @RequestParam("nomorHp") String nomorHp,
@@ -122,7 +131,7 @@ public class ProfilController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         String currentEmail = principal.getName();
-        User user = userRepository.findByEmail(currentEmail).orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
+        User user = userRepository.findByEmail(currentEmail).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
     
         // Validasi nama lengkap
         if (!namaLengkap.matches("^[a-zA-Z\\s]+$")) {
@@ -153,7 +162,7 @@ public class ProfilController {
         return "redirect:/mahasiswa/profil";
     }
 
-    @PostMapping("/profil/ubah-password")
+    @PostMapping("/mahasiswa/profil/ubah-password")
     public String ubahPassword(
             @RequestParam("passwordLama") String passwordLama,
             @RequestParam("passwordBaru") String passwordBaru,
@@ -161,7 +170,7 @@ public class ProfilController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         String email = principal.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
     
         // Validasi password lama
         if (!passwordEncoder.matches(passwordLama, user.getPassword())) {
@@ -194,5 +203,165 @@ public class ProfilController {
     
         redirectAttributes.addFlashAttribute("success", "Password berhasil diubah");
         return "redirect:/mahasiswa/profil";
-    }    
+    }
+
+    @GetMapping("/help-desk/profil")
+    public String profilPageHelpDesk(Principal principal, Model model) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
+    
+        model.addAttribute("user", user);
+        model.addAttribute("currentTimeMillis", System.currentTimeMillis());
+        return "help-desk/Profil";
+    }
+
+    @PostMapping("/help-desk/profil/ubah-foto")
+    public String ubahFotoProfilHelpDesk(@RequestParam("fotoProfil") MultipartFile fotoProfil, Principal principal, RedirectAttributes redirectAttributes) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
+    
+        try {
+            if (!fotoProfil.isEmpty()) {
+                // Validasi ukuran file (maksimal 2 MB)
+                long maxFileSize = 2 * 1024 * 1024; // 2 MB
+                if (fotoProfil.getSize() > maxFileSize) {
+                    redirectAttributes.addFlashAttribute("error", "Ukuran foto profil maksimal 2 MB.");
+                    return "redirect:/help-desk/profil";
+                }
+    
+                // Validasi format file
+                String contentType = fotoProfil.getContentType();
+                if (contentType == null || 
+                    (!contentType.equalsIgnoreCase("image/jpeg") &&
+                    !contentType.equalsIgnoreCase("image/jpg") &&
+                    !contentType.equalsIgnoreCase("image/png"))) {
+                    redirectAttributes.addFlashAttribute("error", "Format foto profil hanya boleh JPG, JPEG, atau PNG.");
+                    return "redirect:/help-desk/profil";
+                }
+
+                // Validasi nama file
+                String originalFilename = fotoProfil.getOriginalFilename();
+                if (originalFilename == null || originalFilename.isBlank()) {
+                    redirectAttributes.addFlashAttribute("error", "Nama foto profil tidak valid.");
+                    return "redirect:/help-desk/profil";
+                }
+
+                // Buat direktori jika belum ada
+                File directory = new File(IMAGE_DIR);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                // Generate nama file unik
+                String fileName = System.currentTimeMillis() + "_" + originalFilename.replaceAll("\\s+", "_");
+
+                // Simpan file ke direktori
+                Path filePath = Paths.get(IMAGE_DIR + fileName);
+                Files.write(filePath, fotoProfil.getBytes());
+
+                // Hapus foto lama jika ada
+                String oldFotoProfil = user.getFotoProfil();
+                if (oldFotoProfil != null) {
+                    File oldFile = new File(IMAGE_DIR + oldFotoProfil);
+                    if (oldFile.exists()) {
+                        oldFile.delete();
+                    }
+                }
+    
+                // Update foto profil di database
+                user.setFotoProfil(fileName);
+                user.setUpdatedAt(LocalDateTime.now());
+                userRepository.save(user);
+            }
+    
+            redirectAttributes.addFlashAttribute("success", "Foto Profil berhasil diubah");
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan saat mengunggah foto profil.");
+        }
+    
+        return "redirect:/help-desk/profil";
+    }
+
+    @PostMapping("/help-desk/profil/ubah-data")
+    public String ubahDataProfilHelpDesk(
+            @RequestParam("namaLengkap") String namaLengkap,
+            @RequestParam("nomorHp") String nomorHp,
+            @RequestParam("jenisKelamin") String jenisKelamin,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+        String currentEmail = principal.getName();
+        User user = userRepository.findByEmail(currentEmail).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
+    
+        // Validasi nama lengkap
+        if (!namaLengkap.matches("^[a-zA-Z\\s]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Nama lengkap hanya boleh berisi huruf dan spasi.");
+            return "redirect:/help-desk/profil";
+        }
+    
+        // Validasi nomor HP
+        if (!nomorHp.matches("^[0-9]{10,13}$")) {
+            redirectAttributes.addFlashAttribute("error", "Nomor HP harus berisi 10 hingga 13 angka.");
+            return "redirect:/help-desk/profil";
+        }
+    
+        // Validasi jenis kelamin
+        if (!jenisKelamin.equalsIgnoreCase("Laki-Laki") && !jenisKelamin.equalsIgnoreCase("Perempuan")) {
+            redirectAttributes.addFlashAttribute("error", "Jenis kelamin tidak valid.");
+            return "redirect:/help-desk/profil";
+        }
+    
+        // Update data user
+        user.setNamaLengkap(namaLengkap);
+        user.setNomorHp(nomorHp);
+        user.setJenisKelamin(jenisKelamin);
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        redirectAttributes.addFlashAttribute("success", "Profil berhasil diubah");
+        return "redirect:/help-desk/profil";
+    }
+
+    @PostMapping("/help-desk/profil/ubah-password")
+    public String ubahPasswordHelpDesk(
+            @RequestParam("passwordLama") String passwordLama,
+            @RequestParam("passwordBaru") String passwordBaru,
+            @RequestParam("konfirmasiPasswordBaru") String konfirmasiPasswordBaru,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan."));
+    
+        // Validasi password lama
+        if (!passwordEncoder.matches(passwordLama, user.getPassword())) {
+            redirectAttributes.addFlashAttribute("error", "Password saat ini salah.");
+            return "redirect:/help-desk/profil";
+        }
+    
+        // Validasi panjang password baru
+        if (passwordBaru.length() < 5) {
+            redirectAttributes.addFlashAttribute("error", "Password baru minimal 5 karakter.");
+            return "redirect:/help-desk/profil";
+        }
+
+        // Validasi panjang password baru
+        if (passwordBaru.length() > 12) {
+            redirectAttributes.addFlashAttribute("error", "Password baru maksimal 12 karakter.");
+            return "redirect:/help-desk/profil";
+        }
+    
+        // Validasi konfirmasi password baru
+        if (!passwordBaru.equals(konfirmasiPasswordBaru)) {
+            redirectAttributes.addFlashAttribute("error", "Konfirmasi password baru tidak sesuai.");
+            return "redirect:/help-desk/profil";
+        }
+    
+        // Simpan password baru
+        user.setPassword(passwordEncoder.encode(passwordBaru));
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+    
+        redirectAttributes.addFlashAttribute("success", "Password berhasil diubah");
+        return "redirect:/help-desk/profil";
+    }
 }

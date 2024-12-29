@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
     <head>
@@ -50,10 +51,10 @@
             </div>
             <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-sm rounded-circle mr-2" alt="Profil">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-xs rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
                     <div class="media-body">
-                        <h6 class="pro-user-name mt-0 mb-0">John Doe</h6>
+                        <h6 class="pro-user-name mt-0 mb-0"><span th:text="${user.namaLengkap}"></span></h6>
                         <span class="pro-user-desc font-weight-600">Help Desk</span>
                     </div>
                     <div class="dropdown align-self-center profile-dropdown-menu">
@@ -61,12 +62,12 @@
                             <span data-feather="chevron-down"></span>
                         </a>
                         <div class="dropdown-menu profile-dropdown">
-                            <a href="Profil.html" class="dropdown-item notify-item">
+                            <a href="/help-desk/profil" class="dropdown-item notify-item">
                                 <i data-feather="user" class="icon-dual icon-xs mr-2"></i>
                                 <span>Profil</span>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <a href="../logout" class="dropdown-item notify-item">
                                 <i data-feather="log-out" class="icon-dual icon-xs mr-2"></i>
                                 <span>Keluar</span>
                             </a>
@@ -100,28 +101,44 @@
                     <div class="container-fluid">
                         <div class="row page-title">
                             <div class="col-md-12">
-                                <h4 class="mb-1 mt-0 text-welcome">Hallo <span th:text="${namaMahasiswa}"></span>, <span th:text="${ucapan}"></span> 👋</h4>
+                                <h4 class="mb-1 mt-0 text-welcome">Hallo <span th:text="${user.namaLengkap}"></span>, <span th:text="${ucapan}"></span> 👋</h4>
                             </div>
                         </div>
-                        
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${error}"></span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <span th:text="${success}"></span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                         <div class="row">
                             <div class="col-xl-5">
                                 <div class="card">
                                     <div class="card-body">
                                         <h5 class="mb-4 mt-0 text-danger">Laporan Barang</h5>
-                                        <form method="POST">
+                                        <form method="POST" action="/help-desk/buat-laporan-barang" enctype="multipart/form-data">
                                             <div class="form-group">
                                                 <label>Mahasiswa</label>
-                                                <input type="text" class="form-control" name="mahasiswa" id="cariMahasiswa" placeholder="Cari nama mahasiswa" required>
+                                                <select class="form-control" name="mahasiswaId" required>
+                                                    <option value="" disabled selected>Pilih Mahasiswa</option>
+                                                    <th:block th:each="mahasiswa : ${mahasiswaList}">
+                                                        <option th:value="${mahasiswa.id}" th:text="${mahasiswa.user.namaLengkap} + ' (No. Kamar ' + ${mahasiswa.noKamar} + ')'"></option>
+                                                    </th:block>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>Jenis Barang</label>
+                                                <label>Jenis</label>
                                                 <div class="custom-control custom-radio mb-2">
-                                                    <input type="radio" class="custom-control-input" name="jenis_barang" value="Paket" id="paket" required>
+                                                    <input type="radio" class="custom-control-input" name="jenis" value="Paket" id="paket" required>
                                                     <label class="custom-control-label" for="paket">Paket</label>
                                                 </div>
                                                 <div class="custom-control custom-radio">
-                                                    <input type="radio" class="custom-control-input" name="jenis_barang" value="Makanan" id="makanan" required>
+                                                    <input type="radio" class="custom-control-input" name="jenis" value="Makanan" id="makanan" required>
                                                     <label class="custom-control-label" for="makanan">Makanan</label>
                                                 </div>
                                             </div>
@@ -129,7 +146,7 @@
                                                 <label>Foto/Bukti</label>
                                                 <div class="d-flex">
                                                     <label id="custom" for="image"><i class="fa-regular fa-images"></i><small>Upload</small></label>
-                                                    <input type="file" name="image" id="image" hidden required>
+                                                    <input type="file" name="buktiFoto" id="image" hidden required>
                                                     <div id="list-images"></div>
                                                 </div>
                                             </div>
@@ -150,30 +167,24 @@
                                                     <tr class="text-center">
                                                         <th>No.</th>
                                                         <th>Mahasiswa</th>
-                                                        <th>Jenis Barang</th>
+                                                        <th>Jenis</th>
                                                         <th>Foto/Bukti</th>
                                                         <th>Status</th>
                                                         <th>Tanggal - Waktu</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <th:block th:each="laporan, iterStat : ${laporanBarangList}">
                                                     <tr class="text-center">
-                                                        <td>1</td>
-                                                        <td>John Doe</td>
-                                                        <td>Makanan</td>
-                                                        <td><img src="../assets/images/barang/makanan.svg" alt="Foto/Bukti" class="rounded" width="150"></td>
-                                                        <td><span class="btn btn-sm btn-warning">Menunggu</span></td>
-                                                        <td>25 Oktober 2024 - 00:00:32</td>
+                                                        <td th:text="${iterStat.index + 1}"></td>
+                                                        <td th:text="${laporan.namaLengkap} + ' (No. Kamar ' + ${laporan.noKamar} + ')'"></td>
+                                                        <td th:text="${laporan.jenis}"></td>
+                                                        <td>
+                                                            <img th:src="@{'/assets/images/laporan-barang/' + ${laporan.buktiFoto}}" class="rounded" width="150" alt="Foto/Bukti">
+                                                        </td>
+                                                        <td><span th:class="'btn btn-sm ' + (${laporan.status.toLowerCase()} == 'menunggu' ? 'btn-warning' : (${laporan.status.toLowerCase()} == 'diterima' ? 'btn-success' : 'btn-danger'))" th:text="${#strings.capitalize(laporan.status)}"></span></td>
+                                                        <td th:text="${laporan.formattedCreatedAt}"></td>
                                                     </tr>
-                                                    <tr class="text-center">
-                                                        <td>2</td>
-                                                        <td>John Doe</td>
-                                                        <td>Paket</td>
-                                                        <td><img src="../assets/images/barang/paket.svg" alt="Foto/Bukti" class="rounded" width="150"></td>
-                                                        <td><span class="btn btn-sm btn-success">Diterima</span></td>
-                                                        <td>25 Oktober 2024 - 12:33:26</td>
-                                                    </tr>
-                                                </tbody>
+                                                </th:block>
                                             </table>
                                         </div>
                                     </div>
@@ -186,39 +197,47 @@
                 <script>
                     const imagesFile = document.getElementById('image');
                     const listimage = document.getElementById('list-images');
-                    const removeList = document.querySelectorAll('#remove-list');
-                    document.addEventListener('DOMContentLoaded', function() {
-                        imagesFile.addEventListener('change', function(e) {
+                    const maxFileSize = 2 * 1024 * 1024;
+                    const allowedExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
+                    document.addEventListener('DOMContentLoaded', function () {
+                        imagesFile.addEventListener('change', function (e) {
                             e.preventDefault();
                             const imageFiles = e.target.files;
                             listimage.innerHTML = '';
                             for (let index = 0; index < imageFiles.length; index++) {
+                                const file = imageFiles[index];
+                                if (file.size > maxFileSize) {
+                                    alert('Ukuran bukti foto maksimal 2 MB');
+                                    imagesFile.value = '';
+                                    return;
+                                }
+                                if (!allowedExtensions.includes(file.type)) {
+                                    alert('Format bukti foto hanya boleh JPG, JPEG, atau PNG');
+                                    imagesFile.value = '';
+                                    return;
+                                }
                                 const reader = new FileReader();
-                                reader.readAsDataURL(imageFiles[index]);
+                                reader.readAsDataURL(file);
                                 reader.addEventListener('load', () => {
                                     const img = `
                                     <div class="position-relative" data-item="${index + 1}" style="width: max-content;">
-                                        <img id="displayimg" class="rounded-2" src="${reader.result}" width="115" height="115" alt="" srcset="">
-                                        <span data-img="${index + 1}" id="remove-list" class="remove-list">X</span>
+                                        <img id="displayimg" class="rounded-2" src="${reader.result}" width="115" height="115" alt="">
+                                        <span data-img="${index + 1}" id="remove-list" class="remove-list" style="cursor: pointer;">X</span>
                                     </div>`;
                                     listimage.insertAdjacentHTML('beforeend', img);
                                 });
                             }
                         });
-                        listimage.addEventListener('click', function(e) {
+                        listimage.addEventListener('click', function (e) {
                             if (e.target.id === 'remove-list') {
                                 const elemData = e.target.dataset.img;
                                 if (elemData) {
-                                    if (confirm("Hapus Foto/Bukti?")) {
+                                    if (confirm('Hapus Bukti?')) {
                                         listimage.removeChild(e.target.parentElement);
+                                        imagesFile.value = '';
                                     }
                                 }
                             }
-                        });
-                    });
-                    $(document).ready(function () {
-                        $('#table').DataTable({
-                            "order": [[0, "asc"]]
                         });
                     });
                 </script>
@@ -244,5 +263,6 @@
         
         <!-- App JS -->
         <script src="../assets/js/app.min.js"></script>
+        <script src="../assets/js/custom.js"></script>
     </body>
 </html>

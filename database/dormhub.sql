@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2024 at 06:51 PM
+-- Generation Time: Dec 30, 2024 at 12:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -138,8 +138,9 @@ CREATE TABLE `laporan_barang` (
 --
 
 INSERT INTO `laporan_barang` (`id`, `helpdesk_id`, `mahasiswa_id`, `jenis`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'paket', 'bukti_paket1.jpg', 'menunggu', '2024-12-15 04:43:33', '2024-12-15 04:43:37'),
-(2, 2, 1, 'makanan', 'bukti_makanan1.jpg', 'diterima', '2024-12-15 04:43:39', '2024-12-15 04:43:46');
+(1, 1, 1, 'Makanan', '1735510006225_DormHub.drawio.png', 'menunggu', '2024-12-30 05:06:46', '2024-12-30 05:06:46'),
+(2, 1, 2, 'Makanan', '1735511210269_DormHub.drawio.png', 'menunggu', '2024-12-30 05:26:50', '2024-12-30 05:26:50'),
+(3, 1, 1, 'Paket', '1735511295230_DormHub.drawio.png', 'menunggu', '2024-12-30 05:28:15', '2024-12-30 05:28:15');
 
 -- --------------------------------------------------------
 
@@ -246,9 +247,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `nomor_hp`, `jenis_kelamin`, `level_id`, `token`, `created_at`, `updated_at`) VALUES
-(1, 'Andi Nugraha', 'mahasiswa@dormhub.my.id', '$2a$10$DD.hS28XoSzjgrisO6RAceGdhPPWqEyug/7ZEVJBGtrOaumLydr1C', '1734974339056_DormHub.drawio.png', '08121234567', 'Laki-Laki', 1, '8262a610-dcaf-45f8-82d0-91800e155099', '2024-12-19 00:40:18', '2024-12-24 00:41:23'),
+(1, 'Andi Nugraha', 'mahasiswa@dormhub.my.id', '$2a$10$DD.hS28XoSzjgrisO6RAceGdhPPWqEyug/7ZEVJBGtrOaumLydr1C', '1734978527748_DormHub.drawio.png', '08121234567', 'Laki-Laki', 1, '8262a610-dcaf-45f8-82d0-91800e155099', '2024-12-19 00:40:18', '2024-12-24 01:28:47'),
 (2, 'Rina Ayu', 'seniorresidence@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121238976', 'Perempuan', 2, NULL, '2024-12-19 01:37:54', '2024-12-19 01:38:04'),
-(3, 'Joko Santoso', 'helpdesk1@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08121234578', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:57', '2024-12-19 01:38:07'),
+(3, 'Joko Santoso', 'helpdesk1@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', '1735514127084_DormHub.drawio.png', '08121234578', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:57', '2024-12-30 06:17:10'),
 (4, 'Rudi Wijaya', 'helpdesk2@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08127891234', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:59', '2024-12-19 14:30:57'),
 (5, 'Fajar Sidiq', 'admin@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08123456789', 'Laki-Laki', 4, NULL, '2024-12-19 01:38:02', '2024-12-19 14:31:00');
 
@@ -357,7 +358,7 @@ ALTER TABLE `konfigurasi`
 -- AUTO_INCREMENT for table `laporan_barang`
 --
 ALTER TABLE `laporan_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `laporan_umum`
@@ -422,6 +423,8 @@ ALTER TABLE `laporan_umum`
 -- Constraints for table `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
+  ADD CONSTRAINT `FK5pqlohrl6plp7qhiug2a8hayg` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `FKm9k60l7iarq8iqykalsoutt8g` FOREIGN KEY (`jurusan_id`) REFERENCES `jurusan` (`id`),
   ADD CONSTRAINT `mahasiswa_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `mahasiswa_ibfk_2` FOREIGN KEY (`jurusan_id`) REFERENCES `jurusan` (`id`);
 
@@ -435,6 +438,7 @@ ALTER TABLE `senior_residence`
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
+  ADD CONSTRAINT `FK3rxjahel52808330txlcj7vy7` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`),
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`);
 COMMIT;
 

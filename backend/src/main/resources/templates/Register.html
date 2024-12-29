@@ -90,8 +90,7 @@
                                                     <select class="form-control" name="jurusanId" required>
                                                         <option value="" disabled selected>Pilih Jurusan</option>
                                                         <th:block th:each="jurusan : ${jurusanList}">
-                                                            <option th:value="${jurusan.id}" th:selected="${jurusan.id == selectedJurusan}" th:text="${jurusan.nama}">
-                                                            </option>
+                                                            <option th:value="${jurusan.id}" th:selected="${jurusan.id == selectedJurusan}" th:text="${jurusan.nama}"></option>
                                                         </th:block>
                                                     </select>
                                                 </div>
