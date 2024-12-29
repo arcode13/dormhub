@@ -26,7 +26,7 @@ public class RegisterController {
     public String daftarPage(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("jurusanList", jurusanService.getAllJurusan()); // Kirim daftar jurusan ke view
-        return "register"; // File register.html
+        return "Register"; // File register.html
     }
 
     @PostMapping("/register")

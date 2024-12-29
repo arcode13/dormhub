@@ -29,7 +29,7 @@ public class LoginController {
         if (error != null) {
             model.addAttribute("error", "Email atau password salah.");
         }
-        return "login"; // Menampilkan halaman login.html
+        return "Login"; // Menampilkan halaman login.html
     }
 
     /**

@@ -4,8 +4,11 @@ import com.dormhub.model.Mahasiswa;
 import com.dormhub.model.User;
 import com.dormhub.repository.MahasiswaRepository;
 import com.dormhub.repository.UserRepository;
+import com.dormhub.repository.LaporanBarangRepository;
 import com.dormhub.service.LaporanService;
+import com.dormhub.model.LaporanBarang;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -31,6 +34,8 @@ public class DashboardController {
 
     @Autowired
     private MahasiswaRepository mahasiswaRepository;
+    @Autowired
+    private LaporanBarangRepository laporanBarangRepository;
 
     @GetMapping("/mahasiswa/dashboard")
     public String mahasiswaDashboard(Model model, RedirectAttributes redirectAttributes) {
@@ -83,7 +88,7 @@ public class DashboardController {
 
         // Log akhir metode
         logger.info("Selesai menjalankan metode mahasiswaDashboard.");
-        return "mahasiswa/dashboard";
+        return "mahasiswa/Dashboard";
     }
 
     private String getUcapan() {
@@ -159,32 +164,38 @@ public class DashboardController {
         return "redirect:/mahasiswa/dashboard";
     }    
 
+           
     @GetMapping("/help-desk/dashboard")
     public String helpDeskDashboard(Model model, RedirectAttributes redirectAttributes) {
         // Log awal masuk ke metode
-        logger.info("Masuk ke metode mahasiswaDashboard.");
-
+        logger.info("Masuk ke metode helpDeskDashboard.");
+    
         // Ambil email dari user yang sedang login
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         logger.debug("Email pengguna yang login: {}", email);
-
+    
         // Cari user berdasarkan email
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             int userId = user.getId();
             logger.debug("User ditemukan dengan ID: {}", userId);
-
+    
             String ucapan = getUcapan();
             model.addAttribute("namaHelpDesk", user.getNamaLengkap());
             model.addAttribute("ucapan", ucapan);
+    
+            // Tambahkan data laporan barang ke model
+            List<LaporanBarang> laporanBarangList = laporanBarangRepository.findByHelpdeskId(userId);
+            model.addAttribute("laporanBarangList", laporanBarangList);
         } else {
             logger.warn("User dengan email {} tidak ditemukan.", email);
             redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
+            return "redirect:/error"; // Redirect ke halaman error jika user tidak ditemukan
         }
-
-        return "help-desk/dashboard";
+    
+        return "help-desk/Dashboard"; // Pastikan ini mengarah ke view yang benar
     }
 
 }

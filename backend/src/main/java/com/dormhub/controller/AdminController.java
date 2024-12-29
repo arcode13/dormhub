@@ -8,6 +8,6 @@ public class AdminController {
 
     @GetMapping("/admin/dashboard")
     public String adminDashboard() {
-        return "admin/dashboard"; // File HTML untuk dashboard admin
+        return "admin/Dashboard"; // File HTML untuk dashboard admin
     }
 }
