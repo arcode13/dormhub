@@ -46,7 +46,7 @@ public class SecurityConfig {
             )
             .logout(logout -> logout
                 .logoutUrl("/logout") // Logout URL
-                .logoutSuccessUrl("/login?logout") // Redirect after logout
+                .logoutSuccessUrl("/login") // Redirect after logout
                 .permitAll()
             )
             .rememberMe(remember -> remember

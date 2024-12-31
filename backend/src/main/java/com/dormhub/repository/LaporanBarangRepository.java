@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface LaporanBarangRepository extends JpaRepository<LaporanBarang, Integer> {
     List<LaporanBarang> findByHelpdeskId(int helpdeskId);
+    List<LaporanBarang> findByMahasiswaIdAndStatus(int mahasiswaId, String status);
 }
-

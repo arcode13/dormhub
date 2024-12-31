@@ -47,8 +47,8 @@
             </div>
             <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
-                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
                     <div class="media-body">
                         <h6 class="pro-user-name mt-0 mb-0"><span th:text="${user.namaLengkap}"></span></h6>
                         <span class="pro-user-desc font-weight-600">Mahasiswa</span>
@@ -144,7 +144,6 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- Loop data daftarLaporan dari Controller -->
                                                     <tr th:each="laporan, iterStat : ${daftarLaporan}" class="text-center">
                                                         <td th:text="${iterStat.index + 1}"></td>
                                                         <td th:text="${laporan.jenis}"></td>
@@ -157,7 +156,7 @@
                                                                 Bukti tidak tersedia.
                                                             </div>                                                            
                                                         </td>
-                                                        <td><span th:class="'btn btn-sm ' + (${laporan.status.toLowerCase()} == 'menunggu' ? 'btn-warning' : (${laporan.status.toLowerCase()} == 'setuju' ? 'btn-success' : 'btn-danger'))" th:text="${#strings.capitalize(laporan.status)}"></span></td>
+                                                        <td><span th:class="'btn btn-sm ' + (${laporan.status.toLowerCase()} == 'menunggu' ? 'btn-warning' : (${laporan.status.toLowerCase()} == 'diterima' ? 'btn-success' : 'btn-danger'))" th:text="${#strings.capitalize(laporan.status)}"></span></td>
                                                         <td th:text="${laporan.formattedCreatedAt}"></td>
                                                     </tr>
                                                 </tbody>                                                

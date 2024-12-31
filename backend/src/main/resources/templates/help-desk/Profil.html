@@ -41,8 +41,8 @@
             </div>
             <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
-                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
                     <div class="media-body">
                         <h6 class="pro-user-name mt-0 mb-0"><span th:text="${user.namaLengkap}"></span></h6>
                         <span class="pro-user-desc font-weight-600">Help Desk</span>
@@ -75,7 +75,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/help-desk/daftar-laporan-umum">
+                                <a href="/help-desk/daftar-laporan">
                                     <i class="fa fa-file"></i>
                                     <span>Daftar Laporan</span>
                                 </a>
@@ -117,7 +117,7 @@
                                                 <a href="javascript:;" class="btn btn-danger btn-sm mr-2">Edit Foto Profil</a>
                                             </div>
                                             <div class="mb-3 text-center">
-                                                <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="rounded-circle border" alt="Profil" width="120" height="120">
+                                                <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="rounded-circle border" alt="Profil" width="120" height="120">
                                             </div>
                                             <div class="align-items-center text-center mb-5">
                                                 <div>

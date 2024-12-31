@@ -20,9 +20,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -90,12 +92,29 @@ public class DashboardController {
                 model.addAttribute("mahasiswa", false);
             }
 
+            // Ambil laporan barang dengan status 'menunggu'
+            List<LaporanBarang> laporanBarangList = laporanBarangRepository.findByMahasiswaIdAndStatus(userId, "menunggu");
+
+            for (LaporanBarang laporan : laporanBarangList) {
+                // Format tanggal
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy - HH:mm", new java.util.Locale("id", "ID"));
+                laporan.setFormattedCreatedAt(laporan.getCreatedAt().format(formatter));
+
+                // Ambil nama Help Desk
+                Optional<HelpDesk> helpDeskOptional = helpDeskRepository.findById(laporan.getHelpdeskId());
+                if (helpDeskOptional.isPresent()) {
+                    HelpDesk helpDesk = helpDeskOptional.get();
+                    laporan.setNamaLengkap(helpDesk.getUser().getNamaLengkap());
+                }
+            }
+
             String ucapan = getUcapan();
             model.addAttribute("user", user);
             model.addAttribute("ucapan", ucapan);
             model.addAttribute("laporanIzinBulanIni", jumlahLaporanIzin);
             model.addAttribute("laporanKeluhanBulanIni", jumlahLaporanKeluhan);
             model.addAttribute("totalLaporan", totalLaporan);
+            model.addAttribute("laporanBarangList", laporanBarangList);
         } else {
             logger.warn("User dengan email {} tidak ditemukan.", email);
             redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
@@ -137,7 +156,9 @@ public class DashboardController {
                 }
     
                 mahasiswa.setIsCheckin(1); // Update status check-in
+                user.setUpdatedAt(LocalDateTime.now());
                 mahasiswaRepository.save(mahasiswa);
+                userRepository.save(user);
     
                 redirectAttributes.addFlashAttribute("success", "Berhasil melakukan check-in");
                 return "redirect:/mahasiswa/dashboard";
@@ -168,7 +189,9 @@ public class DashboardController {
                 }
     
                 mahasiswa.setIsCheckout(1); // Update status check-out
+                user.setUpdatedAt(LocalDateTime.now());
                 mahasiswaRepository.save(mahasiswa);
+                userRepository.save(user);
     
                 redirectAttributes.addFlashAttribute("success", "Berhasil melakukan check-out");
                 return "redirect:/mahasiswa/dashboard";
@@ -177,9 +200,26 @@ public class DashboardController {
     
         redirectAttributes.addFlashAttribute("error", "Data mahasiswa tidak ditemukan.");
         return "redirect:/mahasiswa/dashboard";
-    }    
+    }
 
-           
+    @GetMapping("/mahasiswa/daftar-barang/{id}")
+    public String updateStatusLaporanBarang(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
+        Optional<LaporanBarang> laporanBarangOptional = laporanBarangRepository.findById(id);
+        if (laporanBarangOptional.isPresent()) {
+            LaporanBarang laporanBarang = laporanBarangOptional.get();
+            laporanBarang.setStatus("Diterima");
+            laporanBarang.setUpdatedAt(LocalDateTime.now());
+            laporanBarangRepository.save(laporanBarang);
+
+            // Pesan dinamis berdasarkan jenis barang
+            String jenis = laporanBarang.getJenis();
+            redirectAttributes.addFlashAttribute("success", "" + jenis + " berhasil diterima.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Barang tidak ditemukan.");
+        }
+        return "redirect:/mahasiswa/dashboard";
+    }
+
     @GetMapping("/help-desk/dashboard")
     public String helpDeskDashboard(Model model, RedirectAttributes redirectAttributes) {
         // Log awal masuk ke metode
@@ -209,7 +249,7 @@ public class DashboardController {
             Optional<HelpDesk> helpDeskOptional = helpDeskRepository.findByUserId(userId);
             if (!helpDeskOptional.isPresent()) {
                 redirectAttributes.addFlashAttribute("error", "Help Desk tidak ditemukan.");
-                return "redirect:/mahasiswa/daftar-laporan";
+                return "redirect:/logout";
             }
 
             HelpDesk helpDesk = helpDeskOptional.get();

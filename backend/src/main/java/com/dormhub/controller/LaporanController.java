@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -305,5 +306,92 @@ public class LaporanController {
         }
     
         return "redirect:/help-desk/dashboard";
+    }
+
+    @GetMapping("/help-desk/daftar-laporan")
+    public String daftarLaporanUmumHelpDesk(Model model, RedirectAttributes redirectAttributes) {
+        try {
+            // 1. Ambil email user yang login
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+    
+            // 2. Dapatkan user berdasarkan email
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            if (!userOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
+                return "redirect:/help-desk/dashboard";
+            }
+    
+            User user = userOptional.get();
+            int userId = user.getId();
+    
+            // Ambil daftar mahasiswa dari repository
+            List<Mahasiswa> mahasiswaList = mahasiswaRepository.findAll();
+            model.addAttribute("mahasiswaList", mahasiswaList);
+
+            // 3. Dapatkan mahasiswa_id berdasarkan user_id
+            Optional<HelpDesk> helpDeskOptional = helpDeskRepository.findByUserId(userId);
+            if (!helpDeskOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "Help Desk tidak ditemukan.");
+                return "redirect:/logout";
+            }
+
+            // 3. Ambil data laporan dengan jenis keluhan
+            List<LaporanUmum> daftarLaporan = laporanUmumRepository.findAllKeluhan();
+    
+            // **Format tanggal ke format Indonesia**
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy - HH:mm", new java.util.Locale("id", "ID"));
+            for (LaporanUmum laporan : daftarLaporan) {
+                String formattedDate = laporan.getCreatedAt().format(formatter);
+                laporan.setStatus(capitalize(laporan.getStatus()));
+                laporan.setFormattedCreatedAt(formattedDate);
+
+                Optional<Mahasiswa> mahasiswaOptional = mahasiswaRepository.findById(laporan.getMahasiswaId());
+                if (mahasiswaOptional.isPresent()) {
+                    Mahasiswa mahasiswa = mahasiswaOptional.get();
+                    laporan.setNamaLengkap(mahasiswa.getUser().getNamaLengkap());
+                    laporan.setNoKamar(mahasiswa.getNoKamar());
+                }
+            }
+    
+            // Tambahkan ke model untuk digunakan di view
+            model.addAttribute("user", user);
+            model.addAttribute("daftarLaporan", daftarLaporan);
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan saat mengambil daftar laporan.");
+            return "redirect:/help-desk/dashboard";
+        }
+    
+        return "help-desk/DaftarLaporanUmum"; // View untuk daftar laporan keluhan
+    }    
+
+    @GetMapping("/help-desk/ubah-status/{laporanId}/{status}")
+    public String ubahStatusLaporanUmum(
+            @PathVariable("laporanId") int laporanId,
+            @PathVariable("status") String status,
+            RedirectAttributes redirectAttributes) {
+        try {
+            // Cari laporan berdasarkan ID
+            Optional<LaporanUmum> laporanOptional = laporanUmumRepository.findById(laporanId);
+            if (!laporanOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "Laporan tidak ditemukan.");
+                return "redirect:/help-desk/daftar-laporan";
+            }
+
+            LaporanUmum laporan = laporanOptional.get();
+
+            // Perbarui status laporan
+            laporan.setStatus(status.toLowerCase());
+            laporan.setUpdatedAt(LocalDateTime.now());
+            laporanUmumRepository.save(laporan);
+
+            redirectAttributes.addFlashAttribute("success", "Status laporan berhasil diubah.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan saat mengubah status laporan.");
+        }
+
+        return "redirect:/help-desk/daftar-laporan";
     }
 }

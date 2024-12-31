@@ -21,8 +21,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "foto_profil", nullable = false)
-    private String fotoProfil = "default.png";
+    @Column(name = "foto_profil", nullable = true)
+    private String fotoProfil;
 
     @Column(name = "nomor_hp", nullable = false)
     private String nomorHp;

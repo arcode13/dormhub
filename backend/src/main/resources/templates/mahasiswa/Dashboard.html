@@ -46,8 +46,8 @@
             </div>
             <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
-                    <img th:src="@{'../assets/images/users/' + ${user.fotoProfil} + '?v=' + ${currentTimeMillis}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
                     <div class="media-body">
                         <h6 class="pro-user-name mt-0 mb-0"><span th:text="${user.namaLengkap}"></span></h6>
                         <span class="pro-user-desc font-weight-600">Mahasiswa</span>
@@ -229,34 +229,19 @@
                         </div>
                         
                         <div class="row" th:if="${isCheckin == true}">
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-3 mb-3" th:each="laporan : ${laporanBarangList}">
                                 <div class="goods h-100">
-                                    <img src="../assets/images/barang/paket.svg" alt="Paket">
+                                    <img th:src="@{'../assets/images/laporan-barang/' + ${laporan.buktiFoto}}" alt="Bukti Barang">
                                     <div class="row align-items-center">
                                         <div class="col-6">
-                                            <span class="goods-title">Paket</span>
+                                            <span class="goods-title" th:text="${laporan.jenis}"></span>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <span class="goods-date">22 Desember 2024 - 14:05</span>
+                                            <span class="goods-date" th:text="${laporan.formattedCreatedAt}"></span>
                                         </div>
                                     </div>
-                                    <p>Ambil segera paket anda sekarang juga di Petugas Help Desk kami Lantai 1</p>
-                                    <a href="" class="btn btn-light btn-block mt-3 mb-2">Sudah Diambil</a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="goods h-100">
-                                    <img src="../assets/images/barang/makanan.svg" alt="Makanan">
-                                    <div class="row align-items-center">
-                                        <div class="col-6">
-                                            <span class="goods-title">Makanan</span>
-                                        </div>
-                                        <div class="col-6 text-right">
-                                            <span class="goods-date">22 Desember 2024 - 14:05</span>
-                                        </div>
-                                    </div>
-                                    <p>Ambil segera makanan anda sekarang juga di Petugas Help Desk kami Lantai 1</p>
-                                    <a href="" class="btn btn-light btn-block mt-3 mb-2">Sudah Diambil</a>
+                                    <p th:utext="'Ambil segera ' + ${laporan.jenis.toLowerCase()} + ' anda sekarang juga di Petugas Help Desk kami <b>(' + ${laporan.namaLengkap} + ')</b> Lantai 1.'"></p>
+                                    <a th:href="@{'/mahasiswa/daftar-barang/' + ${laporan.id}}" class="btn btn-light btn-block mt-3 mb-2" th:text="'Terima ' + ${laporan.jenis}"></a>
                                 </div>
                             </div>
                         </div>

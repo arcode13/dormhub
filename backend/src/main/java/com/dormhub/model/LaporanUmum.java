@@ -33,7 +33,29 @@ public class LaporanUmum {
     private LocalDateTime updatedAt;
 
     @Transient
+    private String namaLengkap;
+
+    @Transient
+    private int noKamar;
+
+    @Transient
     private String formattedCreatedAt;
+    
+    public String getNamaLengkap() {
+        return namaLengkap;
+    }
+    
+    public void setNamaLengkap(String namaLengkap) {
+        this.namaLengkap = namaLengkap;
+    }
+    
+    public int getNoKamar() {
+        return noKamar;
+    }
+    
+    public void setNoKamar(int noKamar) {
+        this.noKamar = noKamar;
+    }
 
     // Getters and Setters
     public int getId() {
