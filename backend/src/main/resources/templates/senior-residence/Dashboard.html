@@ -44,35 +44,19 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav flex-row ml-auto d-flex list-unstyled topnav-menu float-right mb-0">
-                        <a href="../mahasiswa/Dashboard.html" class="btn btn-sm btn-danger rounded">
-                            <i class="fa fa-arrow-left mr-1"></i> Kembali
+                        <a href="../mahasiswa/dashboard" class="btn btn-sm btn-danger rounded">
+                            <i class="fa fa-arrow-left mr-1"></i> Kembali ke Mahasiswa
                         </a>
                     </ul>
                 </div>
             </div>
             <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-sm rounded-circle mr-2" alt="Profil">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-xs rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../assets/images/users/user.png'}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
                     <div class="media-body">
-                        <h6 class="pro-user-name mt-0 mb-0">John Doe</h6>
+                        <h6 class="pro-user-name mt-0 mb-0"><span th:text="${user.namaLengkap}"></span></h6>
                         <span class="pro-user-desc font-weight-600">Senior Residence</span>
-                    </div>
-                    <div class="dropdown align-self-center profile-dropdown-menu">
-                        <a class="dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                            <span data-feather="chevron-down"></span>
-                        </a>
-                        <div class="dropdown-menu profile-dropdown">
-                            <a href="Profil.html" class="dropdown-item notify-item">
-                                <i data-feather="user" class="icon-dual icon-xs mr-2"></i>
-                                <span>Profil</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i data-feather="log-out" class="icon-dual icon-xs mr-2"></i>
-                                <span>Keluar</span>
-                            </a>
-                        </div>
                     </div>
                 </div>
                 <div class="sidebar-content">
@@ -80,13 +64,13 @@
                         <ul class="metismenu" id="menu-bar">
                             <li class="menu-title">Menu</li>
                             <li>
-                                <a href="Dashboard.html">
+                                <a href="/senior-residence/dashboard">
                                     <i class="fa fa-home"></i>
                                     <span>Beranda</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="InfoMahasiswa.html">
+                                <a href="/senior-residence/info-mahasiswa">
                                     <i class="fa fa-bed"></i>
                                     <span>Info Mahasiswa</span>
                                 </a>
@@ -102,7 +86,7 @@
                     <div class="container-fluid">
                         <div class="row page-title">
                             <div class="col-md-12">
-                                <h4 class="mb-1 mt-0 text-welcome">Hallo John Doe, Selamat Pagi 👋‹</h4>
+                                <h4 class="mb-1 mt-0 text-welcome">Hallo <span th:text="${user.namaLengkap}"></span>, <span th:text="${ucapan}"></span> 👋</h4>
                             </div>
                         </div>
                         
@@ -112,8 +96,8 @@
                                     <div class="card-body p-0">
                                         <div class="media p-3 d-flex align-items-center">
                                             <div class="media-body">
-                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2">15</h3>
-                                                <span class="font-weight-500">Pelaporan Mahasiswa Bulan Ini</span>
+                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2" th:text="${laporanIzinBulanIni}"></h3>
+                                                <span class="font-weight-500">Laporan Izin Mahasiswa Bulan Ini</span>
                                             </div>
                                             <div class="align-self-center ml-3">
                                                 <div class="d-flex justify-content-center align-items-center bg-danger rounded-circle text-white avatar-custom">
@@ -129,8 +113,8 @@
                                     <div class="card-body p-0">
                                         <div class="media p-3 d-flex align-items-center">
                                             <div class="media-body">
-                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2">20</h3>
-                                                <span class="font-weight-500">Total Seluruh Pelaporan Mahasiswa</span>
+                                                <h3 class="text-uppercase font-weight-600 d-block m-0 mb-2" th:text="${totalLaporanIzin}"></h3>
+                                                <span class="font-weight-500">Total Seluruh Laporan Izin Mahasiswa</span>
                                             </div>
                                             <div class="align-self-center ml-3">
                                                 <div class="d-flex justify-content-center align-items-center bg-danger rounded-circle text-white avatar-custom">
@@ -161,37 +145,29 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="text-center">
-                                                        <td>1</td>
-                                                        <td>John Doe</td>
-                                                        <td>pulang kampung 5 hari</td>
-                                                        <td><img src="../assets/images/bukti/" alt="Bukti" class="rounded" width="100"></td>
+                                                    <tr th:each="laporan, iterStat : ${daftarLaporan}" class="text-center">
+                                                        <td th:text="${iterStat.count}"></td>
+                                                        <td th:utext="${laporan.namaLengkap} + ' - <b>No. Kamar ' + ${laporan.noKamar} + '</b>'"></td>
+                                                        <td th:text="${laporan.alasan}"></td>
+                                                        <td>
+                                                            <div th:if="${laporan.buktiFoto != null}">
+                                                                <img th:src="@{'/assets/images/laporan-umum/' + ${laporan.buktiFoto}}" alt="Bukti" class="rounded" width="250">
+                                                            </div>
+                                                            <div th:if="${laporan.buktiFoto == null}">
+                                                                Bukti tidak tersedia.
+                                                            </div>                                                            
+                                                        </td>
                                                         <td align="center">
                                                             <div class="btn-group">
-                                                                <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menunggu <i class="icon"><span data-feather="chevron-down"></span></i></button>
+                                                                <button type="button" th:class="'btn btn-sm ' + (${laporan.status.toLowerCase()} == 'menunggu' ? 'btn-warning' : (${laporan.status.toLowerCase()} == 'diterima' ? 'btn-success' : 'btn-danger')) + ' dropdown-toggle'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span th:text="${#strings.capitalize(laporan.status)}"></span> <i class="icon"><span data-feather="chevron-down"></span></i></button>
                                                                 <div class="dropdown-menu">
-                                                                    <a class="dropdown-item" href="Dashboard/status/1/setuju">Setuju</a>
-                                                                    <a class="dropdown-item" href="Dashboard/status/1/tolak">Tolak</a>
-                                                            	</div>
+                                                                    <a class="dropdown-item" th:href="@{'/senior-residence/ubah-status/' + ${laporan.id} + '/menunggu'}">Menunggu</a>
+                                                                    <a class="dropdown-item" th:href="@{'/senior-residence/ubah-status/' + ${laporan.id} + '/diterima'}">Diterima</a>
+                                                                    <a class="dropdown-item" th:href="@{'/senior-residence/ubah-status/' + ${laporan.id} + '/ditolak'}">Ditolak</a>
+                                                                </div>
                                                             </div>
-                                                        </td>
-                                                        <td>25 Oktober 2024 - 00:00:32</td>
-                                                    </tr>
-                                                    <tr class="text-center">
-                                                        <td>2</td>
-                                                        <td>John Doe</td>
-                                                        <td>mau ikut UKM pulang jam 11 siang</td>
-                                                        <td><img src="../assets/images/bukti/" alt="Bukti" class="rounded" width="100"></td>
-                                                        <td align="center">
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tolak <i class="icon"><span data-feather="chevron-down"></span></i></button>
-                                                                <div class="dropdown-menu">
-                                                                    <a class="dropdown-item" href="Dashboard/status/2/setuju">Setuju</a>
-                                                                    <a class="dropdown-item" href="Dashboard/status/2/tolak">Tolak</a>
-                                                            	</div>
-                                                            </div>
-                                                        </td>
-                                                        <td>29 Oktober 2024 - 10:22:46</td>
+                                                        </td>                                                        
+                                                        <td th:text="${laporan.formattedCreatedAt}"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -202,14 +178,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <script>
-                    $(document).ready(function () {
-                        $('#table').DataTable({
-                            "order": [[0, "asc"]]
-                        });
-                    });
-                </script>
 
                 <footer class="footer">
                     <div class="container-fluid">
@@ -232,5 +200,6 @@
         
         <!-- App JS -->
         <script src="../assets/js/app.min.js"></script>
+        <script src="../assets/js/custom.js"></script>
     </body>
 </html>

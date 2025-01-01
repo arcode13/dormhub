@@ -11,6 +11,7 @@ import com.dormhub.repository.LaporanBarangRepository;
 import com.dormhub.repository.LaporanUmumRepository;
 import com.dormhub.repository.HelpDeskRepository;
 import com.dormhub.repository.MahasiswaRepository;
+import com.dormhub.repository.SeniorResidenceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -46,6 +47,9 @@ public class LaporanController {
     private MahasiswaRepository mahasiswaRepository;
 
     @Autowired
+    private SeniorResidenceRepository seniorResidenceRepository;
+
+    @Autowired
     private HelpDeskRepository helpDeskRepository;
 
     @Autowired
@@ -66,10 +70,14 @@ public class LaporanController {
         Mahasiswa mahasiswa = mahasiswaRepository.findByUserId(user.getId()).orElse(null);
     
         if (mahasiswa != null) {
+            boolean isSeniorResidence = seniorResidenceRepository.existsByMahasiswaId(mahasiswa.getId());
+
+            model.addAttribute("isSeniorResidence", isSeniorResidence);
             model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);
             model.addAttribute("isCheckout", mahasiswa.getIsCheckout() == 1);
             model.addAttribute("mahasiswa", mahasiswa);
         } else {
+            model.addAttribute("isSeniorResidence", false);
             model.addAttribute("isCheckin", false);
             model.addAttribute("isCheckout", false);
             model.addAttribute("mahasiswa", false);
@@ -197,8 +205,11 @@ public class LaporanController {
                 laporan.setStatus(capitalize(laporan.getStatus()));
                 laporan.setFormattedCreatedAt(formattedDate);
             }
+
+            boolean isSeniorResidence = seniorResidenceRepository.existsByMahasiswaId(mahasiswa.getId());
         
             // 5. Tambahkan daftar laporan ke model agar bisa digunakan di view
+            model.addAttribute("isSeniorResidence", isSeniorResidence);
             model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);
             model.addAttribute("isCheckout", mahasiswa.getIsCheckout() == 1);
             model.addAttribute("user", user);
@@ -367,7 +378,7 @@ public class LaporanController {
     }    
 
     @GetMapping("/help-desk/ubah-status/{laporanId}/{status}")
-    public String ubahStatusLaporanUmum(
+    public String ubahStatusLaporanUmumKKeluhan(
             @PathVariable("laporanId") int laporanId,
             @PathVariable("status") String status,
             RedirectAttributes redirectAttributes) {
@@ -393,5 +404,34 @@ public class LaporanController {
         }
 
         return "redirect:/help-desk/daftar-laporan";
+    }
+
+    @GetMapping("/senior-residence/ubah-status/{laporanId}/{status}")
+    public String ubahStatusLaporanUmumIzin(
+            @PathVariable("laporanId") int laporanId,
+            @PathVariable("status") String status,
+            RedirectAttributes redirectAttributes) {
+        try {
+            // Cari laporan berdasarkan ID
+            Optional<LaporanUmum> laporanOptional = laporanUmumRepository.findById(laporanId);
+            if (!laporanOptional.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "Laporan tidak ditemukan.");
+                return "redirect:/senior-residence/dashboard";
+            }
+
+            LaporanUmum laporan = laporanOptional.get();
+
+            // Perbarui status laporan
+            laporan.setStatus(status.toLowerCase());
+            laporan.setUpdatedAt(LocalDateTime.now());
+            laporanUmumRepository.save(laporan);
+
+            redirectAttributes.addFlashAttribute("success", "Status laporan berhasil diubah.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan saat mengubah status laporan.");
+        }
+
+        return "redirect:/senior-residence/dashboard";
     }
 }

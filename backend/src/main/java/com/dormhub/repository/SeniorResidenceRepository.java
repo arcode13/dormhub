@@ -13,4 +13,6 @@ public interface SeniorResidenceRepository extends JpaRepository<SeniorResidence
 
     // Mencari senior residence berdasarkan id
     Optional<SeniorResidence> findById(int id);
+
+    boolean existsByMahasiswaId(int mahasiswaId);
 }

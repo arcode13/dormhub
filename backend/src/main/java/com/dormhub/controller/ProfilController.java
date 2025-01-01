@@ -3,6 +3,7 @@ package com.dormhub.controller;
 import com.dormhub.model.Mahasiswa;
 import com.dormhub.model.User;
 import com.dormhub.repository.MahasiswaRepository;
+import com.dormhub.repository.SeniorResidenceRepository;
 import com.dormhub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,6 +31,9 @@ public class ProfilController {
     private MahasiswaRepository mahasiswaRepository;
 
     @Autowired
+    private SeniorResidenceRepository seniorResidenceRepository;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     private static final String IMAGE_DIR = "src/main/resources/static/assets/images/users/";
@@ -41,10 +45,14 @@ public class ProfilController {
         Mahasiswa mahasiswa = mahasiswaRepository.findByUserId(user.getId()).orElse(null);
     
         if (mahasiswa != null) {
+            boolean isSeniorResidence = seniorResidenceRepository.existsByMahasiswaId(mahasiswa.getId());
+
+            model.addAttribute("isSeniorResidence", isSeniorResidence);
             model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);
             model.addAttribute("isCheckout", mahasiswa.getIsCheckout() == 1);
             model.addAttribute("mahasiswa", mahasiswa);
         } else {
+            model.addAttribute("isSeniorResidence", false);
             model.addAttribute("isCheckin", false);
             model.addAttribute("isCheckout", false);
             model.addAttribute("mahasiswa", false);

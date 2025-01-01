@@ -59,7 +59,7 @@
                                             </div>
                                             <div class="form-group mt-4">
                                                 <label class="form-control-label">Password</label>
-                                                <a href="forgot-password" class="float-right text-muted text-unline-dashed ml-1">Lupa password?</a>
+                                                <a href="forgot-password" class="float-right text-muted text-unline-dashed ml-1">Lupa Password?</a>
                                                 <div class="input-group input-group-merge">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">
@@ -94,7 +94,7 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-12 text-center">
-                                <p class="text-muted">Belum punya akun? <a href="register" class="text-danger font-weight-bold ml-1">Daftar</a></p>
+                                <p class="text-muted">Belum punya akun? <a href="register" class="text-danger font-weight-bold">Daftar</a></p>
                             </div>
                         </div>
                     </div>
@@ -102,6 +102,71 @@
             </div>
         </div>
         
+        <div id="demo-card">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                    <span>Informasi Demo Akun</span>
+                    <div>
+                        <button type="button" class="close text-white" onclick="closeDemoCard()"><i class="fa fa-times"></i></span></button>
+                        <button type="button" class="close text-white" id="minimize-btn" onclick="minimizeDemoCard()"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div id="demo-card-body" class="card-body">
+                    <p class="mb-2">
+                        <b>Email :</b> mahasiswa@dormhub.my.id<br>
+                        <b>Password :</b> tester123<br>
+                        <b>Level :</b> Mahasiswa
+                    </p>
+                    <hr>
+                    <p class="mb-2">
+                        <b>Email:</b> seniorresidence@dormhub.my.id<br>
+                        <b>Password:</b> tester123<br>
+                        <b>Level:</b> Senior Residence
+                    </p>
+                    <hr>
+                    <p class="mb-2">
+                        <b>Email:</b> helpdesk1@dormhub.my.id<br>
+                        <b>Password:</b> tester123<br>
+                        <b>Level:</b> Help Desk
+                    </p>
+                    <hr>
+                    <p class="mb-2">
+                        <b>Email:</b> helpdesk2@dormhub.my.id<br>
+                        <b>Password:</b> tester123<br>
+                        <b>Level:</b> Help Desk
+                    </p>
+                    <hr>
+                    <p class="mb-2">
+                        <b>Email:</b> admin@dormhub.my.id<br>
+                        <b>Password:</b> tester123<br>
+                        <b>Level:</b> Admin
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function closeDemoCard() {
+                const demoCard = document.getElementById('demo-card');
+                demoCard.classList.add('hide');
+                setTimeout(() => demoCard.remove(), 300);
+            }
+            function minimizeDemoCard() {
+                const demoCardBody = document.getElementById('demo-card-body');
+                const minimizeBtnIcon = document.querySelector('#minimize-btn i');
+                
+                if (demoCardBody.style.display === 'none') {
+                    demoCardBody.style.display = 'block';
+                    minimizeBtnIcon.classList.remove('fa-plus');
+                    minimizeBtnIcon.classList.add('fa-minus');
+                } else {
+                    demoCardBody.style.display = 'none';
+                    minimizeBtnIcon.classList.remove('fa-minus');
+                    minimizeBtnIcon.classList.add('fa-plus');
+                }
+            }
+        </script>
+
         <!-- Vendor JS -->
         <script src="assets/js/vendor.min.js"></script>
         

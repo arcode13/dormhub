@@ -37,6 +37,13 @@
                             </button>
                         </li>
                     </ul>
+                    <th:block th:if="${isSeniorResidence}">
+                    <ul class="navbar-nav flex-row ml-auto d-flex list-unstyled topnav-menu float-right mb-0">
+                        <a href="../senior-residence/dashboard" class="btn btn-sm btn-danger rounded">
+                            <i class="fa fa-arrow-right mr-1"></i> Masuk ke Senior Residence
+                        </a>
+                    </ul>
+                    </th:block>
                 </div>
             </div>
             <div class="left-side-menu">

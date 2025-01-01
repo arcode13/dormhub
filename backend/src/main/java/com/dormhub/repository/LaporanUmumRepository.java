@@ -30,6 +30,15 @@ public interface LaporanUmumRepository extends JpaRepository<LaporanUmum, Intege
 
     List<LaporanUmum> findAllByMahasiswaId(int mahasiswaId);
 
+    @Query("SELECT COUNT(l) FROM LaporanUmum l WHERE l.jenis = 'Izin' AND MONTH(l.createdAt) = MONTH(CURRENT_DATE) AND YEAR(l.createdAt) = YEAR(CURRENT_DATE)")
+    int getSemuaJumlahLaporanIzinBulanIni();
+
+    @Query("SELECT COUNT(l) FROM LaporanUmum l WHERE l.jenis = 'Izin'")
+    int getTotalSemuaLaporanIzin();
+
     @Query("SELECT l FROM LaporanUmum l WHERE l.jenis = 'Keluhan'")
     List<LaporanUmum> findAllKeluhan();
+
+    @Query("SELECT l FROM LaporanUmum l WHERE l.jenis = 'Izin'")
+    List<LaporanUmum> findAllIzin();
 }

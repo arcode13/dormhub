@@ -508,3 +508,30 @@ label[for="image"] {
       margin-top: 20px;
   }
 }
+
+#demo-card {
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+    z-index: 1050;
+    width: 310px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#demo-card.hide {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+#demo-card .card-header .fa-minus, #demo-card .card-header .fa-times {
+    font-size: 18px;
+}
+
+#demo-card .card-header .fa-plus {
+    font-size: 17px;
+}
+
+#demo-card .card-header #minimize-btn {
+    margin-right: 13px;
+}

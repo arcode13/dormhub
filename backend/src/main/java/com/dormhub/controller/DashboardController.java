@@ -1,14 +1,19 @@
 package com.dormhub.controller;
 
 import com.dormhub.model.Mahasiswa;
+import com.dormhub.model.SeniorResidence;
 import com.dormhub.model.User;
 import com.dormhub.repository.MahasiswaRepository;
+import com.dormhub.repository.SeniorResidenceRepository;
 import com.dormhub.repository.HelpDeskRepository;
 import com.dormhub.repository.UserRepository;
 import com.dormhub.repository.LaporanBarangRepository;
+import com.dormhub.repository.LaporanUmumRepository;
 import com.dormhub.service.LaporanService;
+import com.dormhub.service.SeniorResidenceService;
 import com.dormhub.model.HelpDesk;
 import com.dormhub.model.LaporanBarang;
+import com.dormhub.model.LaporanUmum;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,10 +49,19 @@ public class DashboardController {
     private MahasiswaRepository mahasiswaRepository;
 
     @Autowired
+    private SeniorResidenceRepository seniorResidenceRepository;
+
+    @Autowired
     private HelpDeskRepository helpDeskRepository;
 
     @Autowired
     private LaporanBarangRepository laporanBarangRepository;
+
+    @Autowired
+    private LaporanUmumRepository laporanUmumRepository;
+
+    @Autowired
+    private SeniorResidenceService seniorResidenceService;
 
     private String capitalize(String input) {
         if (input == null || input.isEmpty()) return input;
@@ -83,10 +97,14 @@ public class DashboardController {
             Optional<Mahasiswa> mahasiswaOptional = mahasiswaRepository.findByUserId(userId);
             if (mahasiswaOptional.isPresent()) {
                 Mahasiswa mahasiswa = mahasiswaOptional.get();
+                boolean isSeniorResidence = seniorResidenceRepository.existsByMahasiswaId(mahasiswa.getId());
+
+                model.addAttribute("isSeniorResidence", isSeniorResidence);
                 model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);
                 model.addAttribute("isCheckout", mahasiswa.getIsCheckout() == 1);
                 model.addAttribute("mahasiswa", mahasiswa);
             } else {
+                model.addAttribute("isSeniorResidence", false);
                 model.addAttribute("isCheckin", false);
                 model.addAttribute("isCheckout", false);
                 model.addAttribute("mahasiswa", false);
@@ -200,6 +218,71 @@ public class DashboardController {
     
         redirectAttributes.addFlashAttribute("error", "Data mahasiswa tidak ditemukan.");
         return "redirect:/mahasiswa/dashboard";
+    }
+
+    @GetMapping("/senior-residence/dashboard")
+    public String seniorResidenceDashboard(Model model, RedirectAttributes redirectAttributes) {
+        // Log awal masuk ke metode
+        logger.info("Masuk ke metode seniorResidenceDashboard.");
+
+        // Ambil email dari user yang sedang login
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        logger.debug("Email pengguna yang login: {}", email);
+
+        // Cari user berdasarkan email
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            int userId = user.getId();
+            logger.debug("User ditemukan dengan ID: {}", userId);
+
+            // Ambil jumlah laporan berdasarkan mahasiswa_id
+            int jumlahLaporanIzin = laporanUmumRepository.getSemuaJumlahLaporanIzinBulanIni();
+            int totalLaporanIzin = laporanUmumRepository.getTotalSemuaLaporanIzin();
+
+            logger.debug("Jumlah laporan izin: {}", jumlahLaporanIzin);
+            logger.debug("Total laporan: {}", totalLaporanIzin);
+
+            // Ambil data Senior Residence
+            SeniorResidence seniorResidence = seniorResidenceService.getSeniorResidenceByMahasiswaId(userId).orElse(null);
+            if (seniorResidence == null) {
+                redirectAttributes.addFlashAttribute("error", "Senior Residence tidak ditemukan.");
+                return "redirect:/logout";
+            }
+
+            // 3. Ambil data laporan dengan jenis keluhan
+            List<LaporanUmum> daftarLaporan = laporanUmumRepository.findAllIzin();
+    
+            // **Format tanggal ke format Indonesia**
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy - HH:mm", new java.util.Locale("id", "ID"));
+            for (LaporanUmum laporan : daftarLaporan) {
+                String formattedDate = laporan.getCreatedAt().format(formatter);
+                laporan.setStatus(capitalize(laporan.getStatus()));
+                laporan.setFormattedCreatedAt(formattedDate);
+
+                Optional<Mahasiswa> mahasiswaOptional = mahasiswaRepository.findById(laporan.getMahasiswaId());
+                if (mahasiswaOptional.isPresent()) {
+                    Mahasiswa mahasiswa = mahasiswaOptional.get();
+                    laporan.setNamaLengkap(mahasiswa.getUser().getNamaLengkap());
+                    laporan.setNoKamar(mahasiswa.getNoKamar());
+                }
+            }
+
+            String ucapan = getUcapan();
+            model.addAttribute("user", user);
+            model.addAttribute("ucapan", ucapan);
+            model.addAttribute("laporanIzinBulanIni", jumlahLaporanIzin);
+            model.addAttribute("totalLaporanIzin", totalLaporanIzin);
+            model.addAttribute("daftarLaporan", daftarLaporan);
+        } else {
+            logger.warn("User dengan email {} tidak ditemukan.", email);
+            redirectAttributes.addFlashAttribute("error", "User tidak ditemukan.");
+        }
+
+        // Log akhir metode
+        logger.info("Selesai menjalankan metode seniorResidenceDashboard.");
+        return "senior-residence/Dashboard";
     }
 
     @GetMapping("/mahasiswa/daftar-barang/{id}")
