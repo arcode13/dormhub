@@ -1,6 +1,7 @@
 package com.dormhub.controller;
 
 import com.dormhub.model.User;
+import com.dormhub.repository.KonfigurasiRepository;
 import com.dormhub.repository.UserRepository;
 import com.dormhub.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 public class ForgotPasswordController {
@@ -23,9 +26,20 @@ public class ForgotPasswordController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private KonfigurasiRepository konfigurasiRepository;
+
     @GetMapping("/forgot-password")
     public String showForgotPasswordPage(Model model) {
-        return "ForgotPassword"; // Pastikan file forgot-password.html ada di src/main/resources/templates
+        Map<String, String> konfigurasi = konfigurasiRepository.findAllAsMap().stream()
+            .collect(Collectors.toMap(
+                entry -> entry.get("key"),
+                entry -> entry.get("value")
+            ));
+
+        model.addAttribute("konfigurasi", konfigurasi);
+
+        return "ForgotPassword";
     }
 
     @PostMapping("/forgot-password")

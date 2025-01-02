@@ -2,8 +2,13 @@ package com.dormhub.controller;
 
 import com.dormhub.model.Jurusan;
 import com.dormhub.model.User;
+import com.dormhub.repository.KonfigurasiRepository;
 import com.dormhub.service.JurusanService;
 import com.dormhub.service.UserService;
+
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,13 +25,24 @@ public class RegisterController {
     private UserService userService;
 
     @Autowired
-    private JurusanService jurusanService; // Tambahkan service untuk mengambil data jurusan
+    private JurusanService jurusanService;
+
+    @Autowired
+    private KonfigurasiRepository konfigurasiRepository;
 
     @GetMapping("/register")
     public String daftarPage(Model model) {
+        Map<String, String> konfigurasi = konfigurasiRepository.findAllAsMap().stream()
+            .collect(Collectors.toMap(
+                entry -> entry.get("key"),
+                entry -> entry.get("value")
+            ));
+
+        model.addAttribute("konfigurasi", konfigurasi);
+
         model.addAttribute("user", new User());
-        model.addAttribute("jurusanList", jurusanService.getAllJurusan()); // Kirim daftar jurusan ke view
-        return "Register"; // File register.html
+        model.addAttribute("jurusanList", jurusanService.getAllJurusan());
+        return "Register";
     }
 
     @PostMapping("/register")

@@ -12,6 +12,7 @@ import com.dormhub.repository.LaporanUmumRepository;
 import com.dormhub.repository.HelpDeskRepository;
 import com.dormhub.repository.MahasiswaRepository;
 import com.dormhub.repository.SeniorResidenceRepository;
+import com.dormhub.repository.KonfigurasiRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class LaporanController {
@@ -58,13 +61,16 @@ public class LaporanController {
     @Autowired
     private LaporanBarangRepository laporanBarangRepository;
 
+    @Autowired
+    private KonfigurasiRepository konfigurasiRepository;
+
     private String capitalize(String input) {
         if (input == null || input.isEmpty()) return input;
         return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }    
 
     @GetMapping("/mahasiswa/buat-laporan-umum")
-    public String tampilkanFormBuatLaporan(Principal principal, Model model) {
+    public String formBuatLaporan(Principal principal, Model model) {
         String email = principal.getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
         Mahasiswa mahasiswa = mahasiswaRepository.findByUserId(user.getId()).orElse(null);
@@ -83,6 +89,14 @@ public class LaporanController {
             model.addAttribute("mahasiswa", false);
         }
     
+        Map<String, String> konfigurasi = konfigurasiRepository.findAllAsMap().stream()
+            .collect(Collectors.toMap(
+                entry -> entry.get("key"),
+                entry -> entry.get("value")
+            ));
+
+        model.addAttribute("konfigurasi", konfigurasi);
+
         model.addAttribute("user", user);
         return "mahasiswa/BuatLaporanUmum";
     }
@@ -208,6 +222,14 @@ public class LaporanController {
 
             boolean isSeniorResidence = seniorResidenceRepository.existsByMahasiswaId(mahasiswa.getId());
         
+            Map<String, String> konfigurasi = konfigurasiRepository.findAllAsMap().stream()
+                .collect(Collectors.toMap(
+                    entry -> entry.get("key"),
+                    entry -> entry.get("value")
+                ));
+
+            model.addAttribute("konfigurasi", konfigurasi);
+
             // 5. Tambahkan daftar laporan ke model agar bisa digunakan di view
             model.addAttribute("isSeniorResidence", isSeniorResidence);
             model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);
@@ -365,6 +387,14 @@ public class LaporanController {
                 }
             }
     
+            Map<String, String> konfigurasi = konfigurasiRepository.findAllAsMap().stream()
+                .collect(Collectors.toMap(
+                    entry -> entry.get("key"),
+                    entry -> entry.get("value")
+                ));
+
+            model.addAttribute("konfigurasi", konfigurasi);
+
             // Tambahkan ke model untuk digunakan di view
             model.addAttribute("user", user);
             model.addAttribute("daftarLaporan", daftarLaporan);

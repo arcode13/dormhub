@@ -29,7 +29,7 @@ public class ApiController {
             return ResponseEntity.ok(konfigurasi);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Terjadi kesalahan saat memuat konfigurasi: " + e.getMessage());
+                                .body("Terjadi kesalahan saat memuat konfigurasi : " + e.getMessage());
         }
     }
 

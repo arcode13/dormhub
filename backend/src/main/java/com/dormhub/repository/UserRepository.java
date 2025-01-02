@@ -3,22 +3,27 @@ package com.dormhub.repository;
 import com.dormhub.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> { // Gunakan tipe data yang sesuai dengan entitas User ID
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-    boolean existsByEmail(String email);  // Mengecek apakah email sudah terdaftar
+    boolean existsByEmail(String email);
 
-    Optional<User> findByEmail(String email);  // Mencari user berdasarkan email
+    Optional<User> findByEmail(String email);
 
-    // Tambahkan query method jika diperlukan
-    Optional<User> findByEmailAndLevel_Id(String email, Integer levelId); // Mencari user berdasarkan email dan level
+    Optional<User> findByEmailAndLevel_Id(String email, Integer levelId);
 
     Optional<User> findByToken(String token);
 
-    // Contoh query dengan kustom SQL jika dibutuhkan
-    // @Query("SELECT u FROM User u WHERE u.email = ?1 AND u.level.id = ?2")
-    // Optional<User> findUserByEmailAndLevel(String email, Integer levelId);
+    @Query("SELECT COUNT(u) FROM User u WHERE u.level.id IN (1, 2)")
+    int getAllMahasiswa();
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.level.id = 2")
+    int getAllSeniorResidence();
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.level.id = 3")
+    int getAllHelpDesk();
 }

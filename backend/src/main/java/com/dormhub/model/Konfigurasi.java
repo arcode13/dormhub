@@ -16,7 +16,16 @@ public class Konfigurasi {
     @Column(name = "k_value", nullable = false)
     private String kValue;
 
-    // Getters dan Setters
+    // Default constructor (dibutuhkan oleh JPA)
+    public Konfigurasi() {}
+
+    // Constructor dengan parameter
+    public Konfigurasi(int id, String kKey, String kValue) {
+        this.id = id;
+        this.kKey = kKey;
+        this.kValue = kValue;
+    }
+
     public int getId() {
         return id;
     }

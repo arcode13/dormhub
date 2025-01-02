@@ -3,12 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:image" th:content="@{'/assets/images/' + ${konfigurasi['web-logo']}}" />
+        <meta property="og:title" th:content="${konfigurasi['web-nama-website']}" />
         
         <!-- Title -->
-        <title>DormHub - Informasi Kamar</title>
+        <title th:text="${konfigurasi['web-nama-website']} + ' - Informasi Kamar'"></title>
         
         <!-- App Favicon -->
-        <link rel="shortcut icon" href="../assets/images/favicon.ico">
+        <link rel="shortcut icon" th:href="@{'/assets/images/' + ${konfigurasi['web-favicon']}}">
         
         <!-- App CSS -->
         <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -20,13 +22,13 @@
         <div id="wrapper">
             <div class="navbar navbar-expand flex-column flex-md-row navbar-custom">
                 <div class="container-fluid">
-                    <a href="" class="navbar-brand mr-0 mr-md-2 logo">
+                    <a href="/mahasiswa" class="navbar-brand mr-0 mr-md-2 logo">
                         <span class="logo-lg">
-                            <img src="../assets/images/logo.png" alt="" height="24">
-                            <span class="d-inline h5 ml-1 text-logo">DormHub</span>
+                            <img th:src="@{'/assets/images/' + ${konfigurasi['web-logo']}}" alt="Logo" height="24">
+                            <span class="d-inline h5 ml-1 text-logo" th:text="${konfigurasi['web-nama-website']}"></span>
                         </span>
                         <span class="logo-sm">
-                            <img src="../assets/images/logo.png" alt="" height="24">
+                            <img th:src="@{'/assets/images/' + ${konfigurasi['web-logo']}}" alt="Logo" height="24">
                         </span>
                     </a>
                     <ul class="navbar-nav bd-navbar-nav flex-row list-unstyled menu-left mb-0">
@@ -81,7 +83,7 @@
                                     <span>Beranda</span>
                                 </a>
                             </li>
-                            <li th:if="${isCheckin == true}">
+                            <li th:if="${isCheckin == true and isCheckout == false}">
                                 <a href="javascript: void(0);">
                                     <i class="fa fa-file"></i>
                                     <span>Laporan</span>
@@ -120,7 +122,7 @@
                             <div class="offset-lg-2 col-lg-7 mb-4">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="btn btn-danger">Daftar Teman Sekamar</span>
-                                    <span class="btn btn-success">Gedung : A</span>
+                                    <span class="btn btn-success" th:text="'Gedung : ' + ${konfigurasi['web-nama-gedung']}"></span>
                                 </div>
                                 <div class="card">
                                     <div class="card-body p-0">
@@ -171,9 +173,7 @@
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12">
-                                Copyright &copy; 2024 DormHub. All Rights Reserved
-                            </div>
+                            <div class="col-12" th:text="${konfigurasi['web-footer']}"></div>
                         </div>
                     </div>
                 </footer>

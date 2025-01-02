@@ -3,12 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:image" th:content="@{'/assets/images/' + ${konfigurasi['web-logo']}}" />
+        <meta property="og:title" th:content="${konfigurasi['web-nama-website']}" />
         
         <!-- Title -->
-        <title>DormHub - Login</title>
+        <title th:text="${konfigurasi['web-nama-website']} + ' - Login'"></title>
         
         <!-- App Favicon -->
-        <link rel="shortcut icon" href="assets/images/favicon.ico">
+        <link rel="shortcut icon" th:href="@{'/assets/images/' + ${konfigurasi['web-favicon']}}">
         
         <!-- App CSS -->
         <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -26,13 +28,13 @@
                                 <div class="row">
                                     <div class="col-md-6 p-5">
                                         <div class="mx-auto mb-5">
-                                            <a href="">
-                                                <img src="assets/images/logo.png" alt="" height="24" />
-                                                <h3 class="d-inline align-middle ml-1 text-logo">DormHub</h3>
+                                            <a href="login">
+                                                <img th:src="@{'/assets/images/' + ${konfigurasi['web-logo']}}" alt="Logo" height="24" />
+                                                <h3 class="d-inline align-middle ml-1 text-logo" th:text="${konfigurasi['web-nama-website']}"></h3>
                                             </a>
                                         </div>
                                         <h5 class="mb-0 mt-4">Selamat Datang!</h5>
-                                        <p class="text-muted mt-1 mb-4">Masukan email dan password anda untuk mengakses <b>DormHub</b>.</p>
+                                        <p class="text-muted mt-1 mb-4">Masukan email dan password anda untuk mengakses <b th:text="${konfigurasi['web-nama-website']}"></b>.</p>
                                         <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
                                             <span th:text="${error}"></span>
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -84,7 +86,7 @@
                                         <div class="auth-page-sidebar">
                                             <div class="overlay"></div>
                                             <div class="auth-user-testimonial">
-                                                <p class="font-size-24 font-weight-bold text-white mb-1">DormHub!</p>
+                                                <p class="font-size-24 font-weight-bold text-white mb-1" th:text="${konfigurasi['web-nama-website']} + '!'"></p>
                                                 <p class="lead">"Aplikasi Manajemen Asrama Mahasiswa."</p>
                                             </div>
                                         </div>
@@ -119,27 +121,27 @@
                     </p>
                     <hr>
                     <p class="mb-2">
-                        <b>Email:</b> seniorresidence@dormhub.my.id<br>
-                        <b>Password:</b> tester123<br>
-                        <b>Level:</b> Senior Residence
+                        <b>Email :</b> seniorresidence@dormhub.my.id<br>
+                        <b>Password :</b> tester123<br>
+                        <b>Level :</b> Senior Residence
                     </p>
                     <hr>
                     <p class="mb-2">
-                        <b>Email:</b> helpdesk1@dormhub.my.id<br>
-                        <b>Password:</b> tester123<br>
-                        <b>Level:</b> Help Desk
+                        <b>Email :</b> helpdesk1@dormhub.my.id<br>
+                        <b>Password :</b> tester123<br>
+                        <b>Level :</b> Help Desk
                     </p>
                     <hr>
                     <p class="mb-2">
-                        <b>Email:</b> helpdesk2@dormhub.my.id<br>
-                        <b>Password:</b> tester123<br>
-                        <b>Level:</b> Help Desk
+                        <b>Email :</b> helpdesk2@dormhub.my.id<br>
+                        <b>Password :</b> tester123<br>
+                        <b>Level :</b> Help Desk
                     </p>
                     <hr>
                     <p class="mb-2">
-                        <b>Email:</b> admin@dormhub.my.id<br>
-                        <b>Password:</b> tester123<br>
-                        <b>Level:</b> Admin
+                        <b>Email :</b> admin@dormhub.my.id<br>
+                        <b>Password :</b> tester123<br>
+                        <b>Level :</b> Admin
                     </p>
                 </div>
             </div>

@@ -1,5 +1,8 @@
 package com.dormhub.controller;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dormhub.model.User;
+import com.dormhub.repository.KonfigurasiRepository;
 import com.dormhub.service.UserService;
 
 @Controller
@@ -21,6 +25,9 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private KonfigurasiRepository konfigurasiRepository;
+
     /**
      * Menampilkan halaman loginnnn.
      */
@@ -29,7 +36,16 @@ public class LoginController {
         if (error != null) {
             model.addAttribute("error", "Email atau password salah.");
         }
-        return "Login"; // Menampilkan halaman login.html
+
+        Map<String, String> konfigurasi = konfigurasiRepository.findAllAsMap().stream()
+            .collect(Collectors.toMap(
+                entry -> entry.get("key"),
+                entry -> entry.get("value")
+            ));
+
+        model.addAttribute("konfigurasi", konfigurasi);
+
+        return "Login";
     }
 
     /**

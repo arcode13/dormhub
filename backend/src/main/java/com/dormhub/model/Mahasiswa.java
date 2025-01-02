@@ -1,5 +1,7 @@
 package com.dormhub.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -32,6 +34,12 @@ public class Mahasiswa {
 
     @Column(name = "is_checkout", nullable = false)
     private int isCheckout;
+
+    @Column(name = "waktu_checkin")
+    private LocalDateTime waktuCheckin;
+
+    @Column(name = "waktu_checkout")
+    private LocalDateTime waktuCheckout;
 
     // Getter dan Setter
     public int getId() {
@@ -96,5 +104,21 @@ public class Mahasiswa {
 
     public void setIsCheckout(int isCheckout) {
         this.isCheckout = isCheckout;
+    }
+
+    public LocalDateTime getWaktuCheckin() {
+        return waktuCheckin;
+    }
+    
+    public void setWaktuCheckin(LocalDateTime waktuCheckin) {
+        this.waktuCheckin = waktuCheckin;
+    }
+    
+    public LocalDateTime getWaktuCheckout() {
+        return waktuCheckout;
+    }
+    
+    public void setWaktuCheckout(LocalDateTime waktuCheckout) {
+        this.waktuCheckout = waktuCheckout;
     }
 }

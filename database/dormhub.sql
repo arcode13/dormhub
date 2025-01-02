@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2025 at 05:26 PM
+-- Generation Time: Jan 02, 2025 at 06:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,8 +55,7 @@ CREATE TABLE `helpdesk` (
 --
 
 INSERT INTO `helpdesk` (`id`, `user_id`) VALUES
-(1, 3),
-(2, 4);
+(1, 3);
 
 -- --------------------------------------------------------
 
@@ -105,16 +104,16 @@ CREATE TABLE `konfigurasi` (
 --
 
 INSERT INTO `konfigurasi` (`id`, `k_key`, `k_value`) VALUES
-(1, 'web-favicon', 'favicon.ico'),
+(1, 'web-favicon', '1735768726294_favicon.ico'),
 (2, 'web-nama-website', 'DormHub'),
-(3, 'web-nama-gedung', 'A'),
-(4, 'web-logo', 'logo.png'),
+(3, 'web-nama-gedung', 'TEMBAK DOR'),
+(4, 'web-logo', '1735768726586_logo.png'),
 (5, 'web-lantai', '4'),
 (6, 'web-kamar', '14'),
 (7, 'web-kasur', '4'),
-(8, 'web-mulai-tgl-co', '2024-12-19'),
-(9, 'web-selesai-tgl-co', '2024-12-29'),
-(10, 'web-footer', 'Copyright © 2024 DormHub. All Rights Reserved');
+(8, 'web-mulai-tgl-co', '2025-01-09'),
+(9, 'web-selesai-tgl-co', '2025-01-06'),
+(10, 'web-footer', 'Copyright © 2024 DormHub. All Rights Reserved.');
 
 -- --------------------------------------------------------
 
@@ -138,9 +137,8 @@ CREATE TABLE `laporan_barang` (
 --
 
 INSERT INTO `laporan_barang` (`id`, `helpdesk_id`, `mahasiswa_id`, `jenis`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Makanan', '1735510006225_DormHub.drawio.png', 'Sudah Diambil', '2024-12-30 05:06:46', '2024-12-30 05:06:46'),
-(2, 1, 2, 'Makanan', '1735511210269_DormHub.drawio.png', 'menunggu', '2024-12-30 05:26:50', '2024-12-30 05:26:50'),
-(3, 1, 1, 'Paket', '1735511295230_DormHub.drawio.png', 'Diterima', '2024-12-30 05:28:15', '2025-01-01 06:04:15');
+(1, 1, 1, 'Paket', '1735784756098_DormHub.drawio.png', 'Diterima', '2025-01-02 09:25:56', '2025-01-02 09:30:26'),
+(2, 1, 2, 'Makanan', '1735784768433_DormHub.drawio.png', 'menunggu', '2025-01-02 09:26:08', '2025-01-02 09:26:08');
 
 -- --------------------------------------------------------
 
@@ -152,7 +150,7 @@ CREATE TABLE `laporan_umum` (
   `id` int(11) NOT NULL,
   `mahasiswa_id` int(11) NOT NULL,
   `jenis` varchar(255) DEFAULT NULL,
-  `alasan` varchar(255) NOT NULL,
+  `alasan` text NOT NULL,
   `bukti_foto` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -164,8 +162,8 @@ CREATE TABLE `laporan_umum` (
 --
 
 INSERT INTO `laporan_umum` (`id`, `mahasiswa_id`, `jenis`, `alasan`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Izin', 'rgergeg', NULL, 'menunggu', '2025-01-01 03:28:56', '2025-01-01 22:23:34'),
-(2, 1, 'Izin', 'qwqewqe', '1735682777114_DormHub.drawio.png', 'diterima', '2025-01-01 05:06:17', '2025-01-01 05:06:31');
+(1, 1, 'Izin', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.', '1735784531435_DormHub.drawio.png', 'diterima', '2025-01-02 09:22:11', '2025-01-02 09:25:21'),
+(2, 1, 'Keluhan', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.', NULL, 'ditolak', '2025-01-02 09:22:29', '2025-01-02 09:30:11');
 
 -- --------------------------------------------------------
 
@@ -201,19 +199,18 @@ CREATE TABLE `mahasiswa` (
   `no_kamar` int(11) NOT NULL,
   `no_kasur` int(11) NOT NULL,
   `is_checkin` int(1) NOT NULL,
-  `is_checkout` int(1) NOT NULL
+  `is_checkout` int(1) NOT NULL,
+  `waktu_checkin` datetime DEFAULT NULL,
+  `waktu_checkout` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mahasiswa`
 --
 
-INSERT INTO `mahasiswa` (`id`, `user_id`, `jurusan_id`, `no_kamar`, `no_kasur`, `is_checkin`, `is_checkout`) VALUES
-(1, 1, 1, 101, 1, 1, 0),
-(2, 2, 2, 101, 2, 1, 0),
-(3, 6, 12, 101, 3, 0, 0),
-(4, 7, 12, 101, 4, 0, 0),
-(5, 8, 12, 102, 1, 0, 0);
+INSERT INTO `mahasiswa` (`id`, `user_id`, `jurusan_id`, `no_kamar`, `no_kasur`, `is_checkin`, `is_checkout`, `waktu_checkin`, `waktu_checkout`) VALUES
+(1, 1, 1, 101, 1, 0, 0, NULL, NULL),
+(2, 2, 2, 101, 2, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -258,14 +255,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama_lengkap`, `email`, `password`, `foto_profil`, `nomor_hp`, `jenis_kelamin`, `level_id`, `token`, `created_at`, `updated_at`) VALUES
-(1, 'Andi Nugraha', 'mahasiswa@dormhub.my.id', '$2a$10$DD.hS28XoSzjgrisO6RAceGdhPPWqEyug/7ZEVJBGtrOaumLydr1C', '1734978527748_DormHub.drawio.png', '08121234567', 'Laki-Laki', 1, '8262a610-dcaf-45f8-82d0-91800e155099', '2024-12-19 00:40:18', '2024-12-24 01:28:47'),
+(1, 'Andi Nugraha', 'mahasiswa@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', '1735784235367_DormHub.drawio.png', '08121234567', 'Laki-Laki', 1, NULL, '2024-12-19 00:40:18', '2025-01-02 09:17:15'),
 (2, 'Rina Ayu', 'seniorresidence@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', NULL, '08121238976', 'Perempuan', 2, NULL, '2024-12-19 01:37:54', '2025-01-01 17:32:01'),
-(3, 'Joko Santoso', 'helpdesk1@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', '1735514127084_DormHub.drawio.png', '08121234578', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:57', '2024-12-30 06:17:10'),
-(4, 'Rudi Wijaya', 'helpdesk2@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08127891234', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:59', '2024-12-19 14:30:57'),
-(5, 'Fajar Sidiq', 'admin@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', 'default.png', '08123456789', 'Laki-Laki', 4, NULL, '2024-12-19 01:38:02', '2024-12-19 14:31:00'),
-(6, 'rgegeg', 'mahasiswra@dormhub.my.id', '$2a$10$l/jrRZlxgnnWUG.t4XNsxuhSIeHaklK8mz85iJgcn4ELDRRYEIODO', 'default.png', '08567567655', 'Laki-Laki', 1, NULL, '2025-01-01 06:13:46', '2025-01-01 06:13:46'),
-(7, 'erherh', 'mahasiswregregha@dormhub.my.id', '$2a$10$TuE4MfbO4yy3uQ3ebvmbD.fG2ZQ9yYcUvQdI4O4BNBTKu9xCvUIm2', 'default.png', '081212345633', 'Laki-Laki', 1, NULL, '2025-01-01 06:16:03', '2025-01-01 06:16:03'),
-(8, 'regheh', 'erherhre@dormhub.my.id', '$2a$10$NgbhYFAdvvITtwO3GZCIX.LvxuWC9xn55EMkCV/rwAjkRLL4ITuXe', NULL, '0812123345435', 'Laki-Laki', 1, NULL, '2025-01-01 06:17:10', '2025-01-01 06:17:10');
+(3, 'Joko Santoso', 'helpdesk@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', '1735784823749_DormHub.drawio.png', '08121234578', 'Laki-Laki', 3, NULL, '2024-12-19 01:37:57', '2025-01-02 09:27:34'),
+(4, 'Fajar Sidiq', 'admin@dormhub.my.id', '$2a$10$JxIYtJa8fzO9TTuh10IVz.OaJXQB7TeUI/QNo/oOKaFXUDYWJtnlW', '1735784906730_DormHub.drawio.png', '08123456789', 'Laki-Laki', 4, NULL, '2024-12-19 01:38:02', '2025-01-02 09:28:42');
 
 --
 -- Indexes for dumped tables
@@ -354,7 +347,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `helpdesk`
 --
 ALTER TABLE `helpdesk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `jurusan`
@@ -372,7 +365,7 @@ ALTER TABLE `konfigurasi`
 -- AUTO_INCREMENT for table `laporan_barang`
 --
 ALTER TABLE `laporan_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `laporan_umum`
@@ -390,7 +383,7 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT for table `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `senior_residence`
@@ -402,7 +395,7 @@ ALTER TABLE `senior_residence`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

@@ -2,6 +2,7 @@ package com.dormhub.controller;
 
 import com.dormhub.model.Mahasiswa;
 import com.dormhub.model.User;
+import com.dormhub.repository.KonfigurasiRepository;
 import com.dormhub.repository.MahasiswaRepository;
 import com.dormhub.repository.SeniorResidenceRepository;
 import com.dormhub.repository.UserRepository;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class InformasiKamarController {
@@ -27,6 +30,9 @@ public class InformasiKamarController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private KonfigurasiRepository konfigurasiRepository;
 
     @GetMapping("/mahasiswa/informasi-kamar")
     public String informasiKamar(Model model, RedirectAttributes redirectAttributes) {
@@ -52,6 +58,14 @@ public class InformasiKamarController {
                 // Mengambil daftar mahasiswa yang satu kamar
                 List<Mahasiswa> mahasiswaSekamar = mahasiswaRepository.findByNoKamarWithUser(noKamar);
                 
+                Map<String, String> konfigurasi = konfigurasiRepository.findAllAsMap().stream()
+                    .collect(Collectors.toMap(
+                        entry -> entry.get("key"),
+                        entry -> entry.get("value")
+                    ));
+
+                model.addAttribute("konfigurasi", konfigurasi);
+
                 // Mengirimkan data ke view (HTML)
                 model.addAttribute("isSeniorResidence", isSeniorResidence);
                 model.addAttribute("isCheckin", mahasiswa.getIsCheckin() == 1);

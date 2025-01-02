@@ -3,12 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:image" th:content="@{'/assets/images/' + ${konfigurasi['web-logo']}}" />
+        <meta property="og:title" th:content="${konfigurasi['web-nama-website']}" />
         
         <!-- Title -->
-        <title>DormHub - Aplikasi Manajemen Asrama</title>
+        <title th:text="${konfigurasi['web-nama-website']} + ' - Aplikasi Manajemen Asrama'"></title>
         
         <!-- App Favicon -->
-        <link rel="shortcut icon" href="/assets/images/favicon.ico">
+        <link rel="shortcut icon" th:href="@{'/assets/images/' + ${konfigurasi['web-favicon']}}">
         
         <!-- App CSS -->
         <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -19,8 +21,8 @@
     <body class="landing">
         <header class="header">
             <div class="logo">
-                <img src="/assets/images/logo.png" alt="DormHub">
-                <h1>DormHub</h1>
+                <img th:src="@{'/assets/images/' + ${konfigurasi['web-logo']}}" alt="Logo">
+                <h1 th:text="${konfigurasi['web-nama-website']}"></h1>
             </div>
             <div class="header-buttons">
                 <a href="login" class="btn login-btn">Login</a>
