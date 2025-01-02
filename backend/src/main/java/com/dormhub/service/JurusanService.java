@@ -22,4 +22,13 @@ public class JurusanService {
         Optional<Jurusan> jurusan = jurusanRepository.findById(jurusanId);
         return jurusan.orElse(null); // Mengembalikan null jika tidak ditemukan
     }
+
+    public Jurusan saveJurusan(Jurusan jurusan) {
+        return jurusanRepository.save(jurusan);
+    }
+    
+    public void deleteJurusan(int id) {
+        jurusanRepository.deleteById(id);
+    }
+    
 }

@@ -5,6 +5,7 @@ import com.dormhub.repository.SeniorResidenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,5 +41,13 @@ public class SeniorResidenceService {
      */
     public void saveSeniorResidence(SeniorResidence seniorResidence) {
         seniorResidenceRepository.save(seniorResidence);
+    }
+
+    public List<SeniorResidence> getAllSeniorResidence() {
+        return seniorResidenceRepository.findAll();
+    }
+    
+    public void deleteSeniorResidence(int id) {
+        seniorResidenceRepository.deleteById(id);
     }
 }
