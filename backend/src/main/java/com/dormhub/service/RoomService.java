@@ -15,7 +15,7 @@ public class RoomService {
     private KonfigurasiRepository konfigurasiRepository;
 
     public int[] assignRoom() {
-        // Ambil konfigurasi dari k_key di database
+        
         int maxKasurPerKamar = Integer.parseInt(konfigurasiRepository.findKValueByKKey("web-kasur").orElseThrow(
             () -> new RuntimeException("Konfigurasi 'web-kasur' tidak ditemukan")
         ));
@@ -28,15 +28,15 @@ public class RoomService {
             () -> new RuntimeException("Konfigurasi 'web-lantai' tidak ditemukan")
         ));
 
-        // Validasi konfigurasi
+        
         validateKonfigurasi(maxKasurPerKamar, maxKamarPerLantai, totalLantai);
 
-        // Cari kamar terakhir yang digunakan
+        
         int lastRoomNumber = mahasiswaRepository.findLastRoomNumber();
         int lastFloor = getFloorFromRoomNumber(lastRoomNumber); // Lantai dari kamar terakhir
         int occupantsInLastRoom = mahasiswaRepository.countOccupantsInRoom(lastRoomNumber);
 
-        // Tentukan lantai, kamar, dan kasur
+        
         return determineRoomAndBed(
             lastRoomNumber, lastFloor, occupantsInLastRoom,
             maxKasurPerKamar, maxKamarPerLantai, totalLantai

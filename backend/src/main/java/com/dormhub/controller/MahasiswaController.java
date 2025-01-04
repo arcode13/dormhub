@@ -17,9 +17,9 @@ public class MahasiswaController {
 
     @GetMapping("/admin/mahasiswa")
     public String daftarMahasiswa(Model model) {
-        // Mendapatkan daftar semua mahasiswa
+
         List<Mahasiswa> mahasiswaList = mahasiswaService.getAllMahasiswa();
-        // Menambahkan daftar mahasiswa ke model
+        
         model.addAttribute("mahasiswaList", mahasiswaList);
         return "admin/Mahasiswa/index"; // Nama file HTML untuk view
     }

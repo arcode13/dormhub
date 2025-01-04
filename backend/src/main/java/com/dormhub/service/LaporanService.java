@@ -19,7 +19,7 @@ public class LaporanService {
     @Autowired
     private MahasiswaRepository mahasiswaRepository;
 
-    // Mengambil jumlah laporan izin berdasarkan mahasiswa_id
+    
     public int getJumlahLaporanIzinBulanIni(int userId) {
         Mahasiswa mahasiswa = mahasiswaRepository.findByUserId(userId)
             .orElseThrow(() -> new IllegalArgumentException("Mahasiswa tidak ditemukan untuk userId: " + userId));
@@ -27,7 +27,7 @@ public class LaporanService {
         return laporanUmumRepository.countLaporanIzin(mahasiswa.getId());
     }
 
-    // Mengambil jumlah laporan keluhan berdasarkan mahasiswa_id
+    
     public int getJumlahLaporanKeluhanBulanIni(int userId) {
         Mahasiswa mahasiswa = mahasiswaRepository.findByUserId(userId)
             .orElseThrow(() -> new IllegalArgumentException("Mahasiswa tidak ditemukan untuk userId: " + userId));

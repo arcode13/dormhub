@@ -57,7 +57,7 @@ public class LaporanUmum {
         this.noKamar = noKamar;
     }
 
-    // Getters and Setters
+    
     public int getId() {
         return id;
     }

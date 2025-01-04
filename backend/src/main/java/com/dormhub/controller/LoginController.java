@@ -51,10 +51,10 @@ public class LoginController {
     /**
      * Proses login pengguna dan pengalihan ke dashboard sesuai level.
      *
-     * @param username Email pengguna (atau username jika diubah sesuai Spring Security)
-     * @param password Password pengguna
-     * @param model    Model untuk menambahkan atribut jika login gagal
-     * @return Tampilan yang sesuai (Login atau halaman dashboard)
+     * @param username 
+     * @param password 
+     * @param model    
+     * @return 
      */
     @PostMapping("/login")
     public String login(

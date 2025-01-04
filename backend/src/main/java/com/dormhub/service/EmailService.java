@@ -21,11 +21,11 @@ public class EmailService {
         // Konfigurasi SMTP
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.ssl.enable", "true"); // SSL untuk port 465
+        props.put("mail.smtp.ssl.enable", "true"); 
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", "465");
 
-        // Autentikasi
+        
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -33,7 +33,7 @@ public class EmailService {
             }
         });
 
-        // Konfigurasi mailcap untuk Jakarta Mail
+
         MailcapCommandMap mailcap = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
         mailcap.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
         mailcap.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
@@ -42,10 +42,10 @@ public class EmailService {
         mailcap.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
         CommandMap.setDefaultCommandMap(mailcap);
 
-        // Aktifkan debugging untuk memeriksa error SMTP
+        
         session.setDebug(true);
 
-        // Buat pesan email
+        
         Message message = new MimeMessage(session);
         try {
             message.setFrom(new InternetAddress(username, "DormHub Support"));
@@ -56,7 +56,7 @@ public class EmailService {
         message.setSubject("Reset Password DormHub");
         message.setText("tester");
 
-        // Kirim email
+        
         Transport.send(message);
     }
 }

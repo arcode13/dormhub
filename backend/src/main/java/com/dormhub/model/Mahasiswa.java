@@ -41,7 +41,7 @@ public class Mahasiswa {
     @Column(name = "waktu_checkout")
     private LocalDateTime waktuCheckout;
 
-    // Getter dan Setter
+    
     public int getId() {
         return id;
     }

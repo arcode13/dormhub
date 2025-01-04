@@ -3,30 +3,32 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:image" th:content="@{'/assets/images/' + ${konfigurasi['web-logo']}}" />
+        <meta property="og:title" th:content="${konfigurasi['web-nama-website']}" />
         
         <!-- Title -->
-        <title>DormHub - Tambah Jurusan</title>
+        <title th:text="${konfigurasi['web-nama-website']} + ' - Jurusan'"></title>
         
         <!-- App Favicon -->
-        <link rel="shortcut icon" href="../assets/images/favicon.ico">
+        <link rel="shortcut icon" th:href="@{'/assets/images/' + ${konfigurasi['web-favicon']}}">
         
         <!-- App CSS -->
-        <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="../assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-        <link href="../assets/css/app.min.css" rel="stylesheet" type="text/css" />
-        <link href="../assets/css/style.css" rel="stylesheet" type="text/css" />
+        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+        <link th:href="@{/assets/css/icons.min.css}" rel="stylesheet" type="text/css">
+        <link th:href="@{/assets/css/app.min.css}" rel="stylesheet" type="text/css">
+        <link th:href="@{/assets/css/style.css}" rel="stylesheet" type="text/css">
     </head>
     <body>
         <div id="wrapper">
             <div class="navbar navbar-expand flex-column flex-md-row navbar-custom">
                 <div class="container-fluid">
-                    <a href="" class="navbar-brand mr-0 mr-md-2 logo">
+                    <a href="/admin" class="navbar-brand mr-0 mr-md-2 logo">
                         <span class="logo-lg">
-                            <img src="../assets/images/logo.png" alt="" height="24">
-                            <span class="d-inline h5 ml-1 text-logo">DormHub</span>
+                            <img th:src="@{'/assets/images/' + ${konfigurasi['web-logo']}}" alt="Logo" height="24">
+                            <span class="d-inline h5 ml-1 text-logo" th:text="${konfigurasi['web-nama-website']}"></span>
                         </span>
                         <span class="logo-sm">
-                            <img src="../assets/images/logo.png" alt="" height="24">
+                            <img th:src="@{'/assets/images/' + ${konfigurasi['web-logo']}}" alt="Logo" height="24">
                         </span>
                     </a>
                     <ul class="navbar-nav bd-navbar-nav flex-row list-unstyled menu-left mb-0">
@@ -41,10 +43,10 @@
             </div>
             <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-sm rounded-circle mr-2" alt="Profil">
-                    <img src="../assets/images/users/avatar-1.jpg" class="avatar-xs rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../../assets/images/users/user.png'}}" class="avatar-sm rounded-circle mr-2" alt="Profil">
+                    <img th:src="@{${user.fotoProfil != null ? '../../assets/images/users/' + user.fotoProfil + '?v=' + currentTimeMillis : '../../assets/images/users/user.png'}}" class="avatar-xs rounded-circle mr-2" alt="Profil">
                     <div class="media-body">
-                        <h6 class="pro-user-name mt-0 mb-0">John Doe</h6>
+                        <h6 class="pro-user-name mt-0 mb-0"><span th:text="${user.namaLengkap}"></span></h6>
                         <span class="pro-user-desc font-weight-600">Admin</span>
                     </div>
                     <div class="dropdown align-self-center profile-dropdown-menu">
@@ -52,12 +54,12 @@
                             <span data-feather="chevron-down"></span>
                         </a>
                         <div class="dropdown-menu profile-dropdown">
-                            <a href="../Profil.html" class="dropdown-item notify-item">
+                            <a href="/admin/profil" class="dropdown-item notify-item">
                                 <i data-feather="user" class="icon-dual icon-xs mr-2"></i>
                                 <span>Profil</span>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <a href="../../logout" class="dropdown-item notify-item">
                                 <i data-feather="log-out" class="icon-dual icon-xs mr-2"></i>
                                 <span>Keluar</span>
                             </a>
@@ -69,9 +71,15 @@
                         <ul class="metismenu" id="menu-bar">
                             <li class="menu-title">Menu</li>
                             <li>
-                                <a href="Dashboard.html">
+                                <a href="/admin/dashboard">
                                     <i class="fa fa-home"></i>
                                     <span>Beranda</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/jurusan">
+                                    <i class="fa fa-graduation-cap"></i>
+                                    <span>Jurusan</span>
                                 </a>
                             </li>
                             <li>
@@ -82,24 +90,18 @@
                                 </a>
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li>
-                                        <a href="Mahasiswa">Mahasiswa</a>
+                                        <a href="/admin/mahasiswa">Mahasiswa</a>
                                     </li>
                                     <li>
-                                        <a href="SeniorResidence">Senior Residence</a>
+                                        <a href="/admin/senior-residence">Senior Residence</a>
                                     </li>
                                     <li>
-                                        <a href="HelpDesk">Help Desk</a>
+                                        <a href="/admin/help-desk">Help Desk</a>
                                     </li>
                                     <li>
-                                        <a href="Admin">Admin</a>
+                                        <a href="/admin/admin">Admin</a>
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
-                                <a href="Jurusan.html">
-                                    <i class="fa fa-graduation-cap"></i>
-                                    <span>Jurusan</span>
-                                </a>
                             </li>
                         </ul>
                     </div>
@@ -117,13 +119,13 @@
                         </div>
                         <div class="row">
                             <div class="offset-lg-2 col-lg-7">
-                                <a href="Jurusan.html" class="btn btn-sm btn-warning back-to-select mb-3"><i class="fa fa-arrow-left mr-1"></i> Kembali</a>
+                                <a href="/admin/jurusan" class="btn btn-sm btn-warning back-to-select mb-3"><i class="fa fa-arrow-left mr-1"></i> Kembali</a>
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="POST">
+                                        <form th:action="@{/admin/jurusan/tambah}" method="post">
                                             <div class="form-group">
                                                 <label>Nama Jurusan</label>
-                                                <input type="text" class="form-control" name="nama_Jurusan" value="">
+                                                <input type="text" class="form-control" name="nama">
                                             </div>
                                             <div class="form-group text-right">
                                                 <button type="reset" class="btn btn-light">Ulangi</button>
@@ -175,9 +177,7 @@
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12">
-                                Copyright &copy; 2024 DormHub. All Rights Reserved
-                            </div>
+                            <div class="col-12" th:text="${konfigurasi['web-footer']}"></div>
                         </div>
                     </div>
                 </footer>
@@ -185,9 +185,9 @@
         </div>
         
         <!-- Vendor JS -->
-        <script src="../assets/js/vendor.min.js"></script>
+        <script src="../../assets/js/vendor.min.js"></script>
         
         <!-- App JS -->
-        <script src="../assets/js/app.min.js"></script>
+        <script src="../../assets/js/app.min.js"></script>
     </body>
 </html>

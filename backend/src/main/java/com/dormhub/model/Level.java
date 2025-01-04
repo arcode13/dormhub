@@ -8,12 +8,12 @@ public class Level {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Ganti dari int ke Long
+    private Long id; 
 
     @Column(nullable = false)
     private String nama;
 
-    // Getters and Setters
+    
     public Long getId() {
         return id;
     }

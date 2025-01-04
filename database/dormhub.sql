@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 02, 2025 at 06:49 AM
+-- Generation Time: Jan 04, 2025 at 04:08 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -85,7 +85,9 @@ INSERT INTO `jurusan` (`id`, `nama`) VALUES
 (10, 'Akuntansi'),
 (11, 'Ilmu Komunikasi'),
 (12, 'Administrasi Bisnis'),
-(13, 'Teknik Fisika');
+(13, 'Teknik Fisika'),
+(14, 'haha'),
+(15, 'teknik kedokteran');
 
 -- --------------------------------------------------------
 
@@ -138,7 +140,8 @@ CREATE TABLE `laporan_barang` (
 
 INSERT INTO `laporan_barang` (`id`, `helpdesk_id`, `mahasiswa_id`, `jenis`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 'Paket', '1735784756098_DormHub.drawio.png', 'Diterima', '2025-01-02 09:25:56', '2025-01-02 09:30:26'),
-(2, 1, 2, 'Makanan', '1735784768433_DormHub.drawio.png', 'menunggu', '2025-01-02 09:26:08', '2025-01-02 09:26:08');
+(2, 1, 2, 'Makanan', '1735784768433_DormHub.drawio.png', 'menunggu', '2025-01-02 09:26:08', '2025-01-02 09:26:08'),
+(3, 1, 1, 'Paket', '1735813374919_logo.png', 'menunggu', '2025-01-02 17:22:54', '2025-01-02 17:22:54');
 
 -- --------------------------------------------------------
 
@@ -163,7 +166,7 @@ CREATE TABLE `laporan_umum` (
 
 INSERT INTO `laporan_umum` (`id`, `mahasiswa_id`, `jenis`, `alasan`, `bukti_foto`, `status`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Izin', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.', '1735784531435_DormHub.drawio.png', 'diterima', '2025-01-02 09:22:11', '2025-01-02 09:25:21'),
-(2, 1, 'Keluhan', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.', NULL, 'ditolak', '2025-01-02 09:22:29', '2025-01-02 09:30:11');
+(2, 1, 'Keluhan', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.', NULL, 'diterima', '2025-01-02 09:22:29', '2025-01-02 17:24:00');
 
 -- --------------------------------------------------------
 
@@ -209,8 +212,8 @@ CREATE TABLE `mahasiswa` (
 --
 
 INSERT INTO `mahasiswa` (`id`, `user_id`, `jurusan_id`, `no_kamar`, `no_kasur`, `is_checkin`, `is_checkout`, `waktu_checkin`, `waktu_checkout`) VALUES
-(1, 1, 1, 101, 1, 0, 0, NULL, NULL),
-(2, 2, 2, 101, 2, 1, 0, NULL, NULL);
+(1, 1, 1, 101, 1, 1, 1, '2025-01-02 17:23:09', '2025-01-02 17:28:34'),
+(2, 2, 2, 101, 2, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -353,7 +356,7 @@ ALTER TABLE `helpdesk`
 -- AUTO_INCREMENT for table `jurusan`
 --
 ALTER TABLE `jurusan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `konfigurasi`
@@ -365,7 +368,7 @@ ALTER TABLE `konfigurasi`
 -- AUTO_INCREMENT for table `laporan_barang`
 --
 ALTER TABLE `laporan_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `laporan_umum`

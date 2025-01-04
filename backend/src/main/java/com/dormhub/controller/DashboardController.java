@@ -309,7 +309,7 @@ public class DashboardController {
         // Log awal masuk ke metode
         logger.info("Masuk ke metode seniorResidenceDashboard.");
 
-        // Ambil email dari user yang sedang login
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         logger.debug("Email pengguna yang login: {}", email);
@@ -335,10 +335,10 @@ public class DashboardController {
                 return "redirect:/logout";
             }
 
-            // 3. Ambil data laporan dengan jenis keluhan
+            
             List<LaporanUmum> daftarLaporan = laporanUmumRepository.findAllIzin();
     
-            // **Format tanggal ke format Indonesia**
+            
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy - HH:mm", new java.util.Locale("id", "ID"));
             for (LaporanUmum laporan : daftarLaporan) {
                 String formattedDate = laporan.getCreatedAt().format(formatter);
@@ -572,7 +572,7 @@ public class DashboardController {
                 }
             }
 
-            // 2. Validasi dan simpan logo jika ada
+
             if (logo != null && !logo.isEmpty()) {
                 // Ambil file lama dari database
                 Optional<String> oldLogoOptional = konfigurasiRepository.findKValueByKKey("web-logo");

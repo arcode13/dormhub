@@ -17,8 +17,8 @@ public class SeniorResidenceService {
     /**
      * Mendapatkan data Senior Residence berdasarkan mahasiswa ID.
      *
-     * @param mahasiswaId ID mahasiswa
-     * @return Optional SeniorResidence
+     * @param mahasiswaId 
+     * @return 
      */
     public Optional<SeniorResidence> getSeniorResidenceByMahasiswaId(int mahasiswaId) {
         return seniorResidenceRepository.findByMahasiswaId(mahasiswaId);
@@ -27,8 +27,8 @@ public class SeniorResidenceService {
     /**
      * Mendapatkan data Senior Residence berdasarkan ID.
      *
-     * @param id ID senior residence
-     * @return Optional SeniorResidence
+     * @param id 
+     * @return 
      */
     public Optional<SeniorResidence> getSeniorResidenceById(int id) {
         return seniorResidenceRepository.findById(id);
@@ -37,7 +37,7 @@ public class SeniorResidenceService {
     /**
      * Menyimpan atau memperbarui data Senior Residence.
      *
-     * @param seniorResidence Objek SeniorResidence
+     * @param seniorResidence 
      */
     public void saveSeniorResidence(SeniorResidence seniorResidence) {
         seniorResidenceRepository.save(seniorResidence);

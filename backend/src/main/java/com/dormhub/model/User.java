@@ -43,7 +43,7 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // Getters and Setters
+    
     public int getId() {
         return id;
     }

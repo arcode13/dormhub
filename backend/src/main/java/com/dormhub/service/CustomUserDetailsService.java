@@ -19,14 +19,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // Cari user berdasarkan email
+        
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User tidak ditemukan dengan email: " + email));
 
-        // Ambil role dari level_id
+        
         String role = "ROLE_" + user.getLevel().getNama().toUpperCase().replace(" ", "_");
 
-        // Buat objek UserDetails
+        
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail()) // Username adalah email
                 .password(user.getPassword()) // Password terenkripsi

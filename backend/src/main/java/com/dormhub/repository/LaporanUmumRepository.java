@@ -13,8 +13,8 @@ public interface LaporanUmumRepository extends JpaRepository<LaporanUmum, Intege
     /**
      * Menghitung jumlah laporan izin bulan ini berdasarkan mahasiswa_id.
      *
-     * @param mahasiswaId ID mahasiswa
-     * @return Jumlah laporan izin bulan ini
+     * @param mahasiswaId 
+     * @return 
      */
     @Query(value = "SELECT COUNT(*) FROM laporan_umum WHERE jenis = 'izin' AND mahasiswa_id = :mahasiswaId AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())", nativeQuery = true)
     int countLaporanIzin(int mahasiswaId);
@@ -22,8 +22,8 @@ public interface LaporanUmumRepository extends JpaRepository<LaporanUmum, Intege
     /**
      * Menghitung jumlah laporan keluhan bulan ini berdasarkan mahasiswa_id.
      *
-     * @param mahasiswaId ID mahasiswa
-     * @return Jumlah laporan keluhan bulan ini
+     * @param mahasiswaId 
+     * @return 
      */
     @Query(value = "SELECT COUNT(*) FROM laporan_umum WHERE jenis = 'keluhan' AND mahasiswa_id = :mahasiswaId AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())", nativeQuery = true)
     int countLaporanKeluhan(int mahasiswaId);

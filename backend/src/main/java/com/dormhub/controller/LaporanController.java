@@ -404,7 +404,7 @@ public class LaporanController {
             return "redirect:/help-desk/dashboard";
         }
     
-        return "help-desk/DaftarLaporanUmum"; // View untuk daftar laporan keluhan
+        return "help-desk/DaftarLaporanUmum"; 
     }    
 
     @GetMapping("/help-desk/ubah-status/{laporanId}/{status}")
